@@ -1,15 +1,34 @@
-// src/pages/Login.jsx
 import { useState } from "react";
-import { TextField, Button, Container, Typography, Box } from "@mui/material";
+import {
+  TextField,
+  Button,
+  Container,
+  Typography,
+  Box,
+  Checkbox,
+  FormControlLabel,
+  Link,
+} from "@mui/material";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import logo1 from "../assets/logo1.svg";
+import logo2 from "../assets/logo2.svg";
+import useAuth from "../hooks/useAuth";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
+  const { login } = useAuth();
 
-  const handleLogin = (event) => {
+  const handleLogin = async (event) => {
     event.preventDefault();
-    console.log("Logging in with:", email, password);
+    try {
+      await login(email, password);
+      navigate("/dashboard");
+    } catch (error) {
+      setError(error.response ? error.response.data.message : "Login failed");
+    }
   };
 
   return (
@@ -32,10 +51,21 @@ function Login() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
+          padding: 4,
         }}>
-        <Typography component="h1" variant="h5">
+        <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
+          <img src={logo2} alt="Logo" style={{ width: 50, marginRight: 8 }} />
+          <Typography component="h1" variant="h5">
+            Book Rent
+          </Typography>
+        </Box>
+        <Typography
+          component="h2"
+          variant="h6"
+          sx={{ mb: 2, borderBottom: "2px solid #f0f0f0" }}>
           Login
         </Typography>
+        {error && <Typography color="error">{error}</Typography>}
         <form onSubmit={handleLogin}>
           <TextField
             variant="outlined"
@@ -59,13 +89,38 @@ function Login() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
+          <FormControlLabel
+            control={
+              <Checkbox
+                value="remember"
+                sx={{
+                  color: "",
+                  "&.Mui-checked": {
+                    color: "#2196f3",
+                  },
+                }}
+              />
+            }
+            label="Remember me"
+          />
           <Button
             type="submit"
             fullWidth
             variant="contained"
-            sx={{ mt: 3, mb: 2 }}>
+            sx={{ mt: 3, mb: 2, bgcolor: "#00abff" }}>
             Login
           </Button>
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
+            <Typography variant="body2">Havent got an account?</Typography>
+            <Link
+              component={RouterLink}
+              to="/signup"
+              color="#00abff"
+              marginLeft={1}
+              variant="body2">
+              Sign up
+            </Link>
+          </Box>
         </form>
       </Container>
     </Box>
