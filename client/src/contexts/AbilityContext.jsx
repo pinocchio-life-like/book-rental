@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import { Ability } from "@casl/ability";
 import { defineAbilitiesFor } from "../utils/defineAbilities";
 import useAuth from "../hooks/useAuth";

@@ -1,7 +1,6 @@
-// src/services/api.js
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api"; // Adjust based on your backend URL
+const API_URL = "http://localhost:5000/api";
 
 const api = axios.create({
   baseURL: API_URL,
@@ -10,7 +9,6 @@ const api = axios.create({
   },
 });
 
-// Function to set JWT token in headers
 export const setAuthToken = (token) => {
   if (token) {
     api.defaults.headers.common["Authorization"] = `Bearer ${token}`;

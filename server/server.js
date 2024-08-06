@@ -13,16 +13,13 @@ const { protect } = require("./middleware/authMiddleware");
 const app = express();
 app.use(express.json());
 
-// Enable CORS for all routes
 app.use(cors());
 
-// Define routes
 app.use("/api/auth", authRoutes);
 app.use("/api/users", protect, userRoutes);
 app.use("/api/books", protect, bookRoutes);
 app.use("/api/rentals", protect, rentalRoutes);
 
-// Error handling middleware
 app.use(handleErrors);
 
 app.listen(process.env.PORT || 5000, () => {

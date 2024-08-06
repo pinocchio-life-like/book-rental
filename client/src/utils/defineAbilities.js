@@ -4,7 +4,7 @@ export function defineAbilitiesFor(user) {
   const { can, cannot, build } = new AbilityBuilder(Ability);
 
   if (user.role === "admin") {
-    can("manage", "all"); // Admin can manage everything
+    can("manage", "all");
   } else if (user.role === "book_owner") {
     can("read", "Book");
     can("create", "Book");
@@ -12,7 +12,7 @@ export function defineAbilitiesFor(user) {
     can("delete", "Book", { ownerId: user.id });
     cannot("delete", "Book", { isApproved: true });
   } else {
-    can("read", "Book"); // Regular users can only read books
+    can("read", "Book");
   }
 
   return build();

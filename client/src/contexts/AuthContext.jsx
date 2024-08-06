@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect } from "react";
 import {
   setAuthToken,
   login as loginService,
@@ -17,7 +17,6 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     if (authState.token) {
       setAuthToken(authState.token);
-      // Fetch user info if needed
     }
   }, [authState.token]);
 
