@@ -47,14 +47,22 @@ function Login() {
           <AuthTextField
             label="Email Address"
             type="email"
-            {...emailField}
+            value={emailField.value}
+            onChange={emailField.handleChange}
+            onBlur={emailField.handleBlur}
+            error={!!emailField.error}
+            helperText={emailField.error}
             autoComplete="email"
             autoFocus
           />
           <AuthTextField
             label="Password"
             type="password"
-            {...passwordField}
+            value={passwordField.value}
+            onChange={passwordField.handleChange}
+            onBlur={passwordField.handleBlur}
+            error={!!passwordField.error}
+            helperText={passwordField.error}
             autoComplete="current-password"
           />
           <FormControlLabel

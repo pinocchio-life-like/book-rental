@@ -85,22 +85,59 @@ function Signup() {
       <AuthFormContainer title="Signup as Owner">
         {error && <Typography color="error">{error}</Typography>}
         <form onSubmit={handleSignup}>
-          <AuthTextField label="Full Name" {...nameField} />
-          <AuthTextField label="Email Address" type="email" {...emailField} />
+          <AuthTextField
+            label="Full Name"
+            value={nameField.value}
+            onChange={nameField.handleChange}
+            onBlur={nameField.handleBlur}
+            error={nameField.error}
+            helperText={nameField.error}
+          />
+          <AuthTextField
+            label="Email Address"
+            type="email"
+            value={emailField.value}
+            onChange={emailField.handleChange}
+            onBlur={emailField.handleBlur}
+            error={!!emailField.error}
+            helperText={emailField.error}
+          />
           <AuthTextField
             label="Password"
             type="password"
-            {...passwordField}
+            value={passwordField.value}
+            onChange={passwordField.handleChange}
+            onBlur={passwordField.handleBlur}
+            error={!!passwordField.error}
+            helperText={passwordField.error}
             autoComplete="new-password"
           />
           <AuthTextField
             label="Confirm Password"
             type="password"
-            {...confirmPasswordField}
+            value={confirmPasswordField.value}
+            onChange={confirmPasswordField.handleChange}
+            onBlur={confirmPasswordField.handleBlur}
+            error={!!confirmPasswordField.error}
+            helperText={confirmPasswordField.error}
             autoComplete="new-password"
           />
-          <AuthTextField label="Location" {...locationField} />
-          <AuthTextField label="Phone Number" {...phoneNumberField} />
+          <AuthTextField
+            label="Location"
+            value={locationField.value}
+            onChange={locationField.handleChange}
+            onBlur={locationField.handleBlur}
+            error={locationField.error}
+            helperText={locationField.error}
+          />
+          <AuthTextField
+            label="Phone Number"
+            value={phoneNumberField.value}
+            onChange={phoneNumberField.handleChange}
+            onBlur={phoneNumberField.handleBlur}
+            error={phoneNumberField.error}
+            helperText={phoneNumberField.error}
+          />
           <FormControlLabel
             control={
               <Checkbox
