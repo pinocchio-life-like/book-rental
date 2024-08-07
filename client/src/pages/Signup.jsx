@@ -1,31 +1,31 @@
 import { useState, useEffect } from "react";
 import {
-  TextField,
-  Button,
-  Container,
-  Typography,
   Box,
-  Checkbox,
   FormControlLabel,
+  Checkbox,
+  Typography,
   Link,
-  CircularProgress,
 } from "@mui/material";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
-import logo1 from "../assets/logo1.svg";
-import logo2 from "../assets/logo2.svg";
 import useAuth from "../hooks/useAuth";
+import LogoSection from "../components/LogoSection";
+import AuthFormContainer from "../components/AuthFormContainer";
+import AuthTextField from "../components/AuthTextField";
+import LoadingButton from "../components/LoadingButton";
+import useFormField from "../hooks/useFormField";
+import useEmailField from "../hooks/useEmailField";
+import usePasswordField from "../hooks/usePasswordField";
+import useConfirmPasswordField from "../hooks/useConfirmPasswordField";
 
 function Signup() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [location, setLocation] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const nameField = useFormField("");
+  const emailField = useEmailField("");
+  const passwordField = usePasswordField("");
+  const confirmPasswordField = useConfirmPasswordField(passwordField.value);
+  const locationField = useFormField("");
+  const phoneNumberField = useFormField("");
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [error, setError] = useState(null);
-  const [passwordError, setPasswordError] = useState(null);
-  const [emailError, setEmailError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
   const navigate = useNavigate();
@@ -33,74 +33,28 @@ function Signup() {
 
   useEffect(() => {
     const isFormValid =
-      name &&
-      email &&
-      password &&
-      confirmPassword &&
-      location &&
-      phoneNumber &&
+      nameField.value &&
+      emailField.value &&
+      passwordField.value &&
+      confirmPasswordField.value &&
+      locationField.value &&
+      phoneNumberField.value &&
       termsAccepted &&
-      !passwordError &&
-      !emailError &&
-      password === confirmPassword;
+      !nameField.error &&
+      !emailField.error &&
+      !passwordField.error &&
+      !confirmPasswordField.error &&
+      passwordField.value === confirmPasswordField.value;
     setIsFormValid(isFormValid);
   }, [
-    name,
-    email,
-    password,
-    confirmPassword,
-    location,
-    phoneNumber,
+    nameField,
+    emailField,
+    passwordField,
+    confirmPasswordField,
+    locationField,
+    phoneNumberField,
     termsAccepted,
-    passwordError,
-    emailError,
   ]);
-
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-    if (emailError) {
-      validateEmail(e.target.value);
-    }
-  };
-
-  const handleEmailBlur = () => {
-    validateEmail(email);
-  };
-
-  const validateEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setEmailError("Invalid email address");
-    } else {
-      setEmailError(null);
-    }
-  };
-
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-    if (passwordError) {
-      validatePassword(e.target.value, confirmPassword);
-    }
-  };
-
-  const handleConfirmPasswordChange = (e) => {
-    setConfirmPassword(e.target.value);
-    if (passwordError) {
-      validatePassword(password, e.target.value);
-    }
-  };
-
-  const handleConfirmPasswordBlur = () => {
-    validatePassword(password, confirmPassword);
-  };
-
-  const validatePassword = (password, confirmPassword) => {
-    if (password && confirmPassword && password !== confirmPassword) {
-      setPasswordError("Passwords do not match");
-    } else {
-      setPasswordError(null);
-    }
-  };
 
   const handleSignup = async (event) => {
     event.preventDefault();
@@ -110,7 +64,13 @@ function Signup() {
     }
     setLoading(true);
     try {
-      await signup(name, email, password, location, phoneNumber);
+      await signup(
+        nameField.value,
+        emailField.value,
+        passwordField.value,
+        locationField.value,
+        phoneNumberField.value
+      );
       navigate("/dashboard");
     } catch (error) {
       setError(error.response ? error.response.data.message : "Signup failed");
@@ -121,108 +81,26 @@ function Signup() {
 
   return (
     <Box sx={{ display: "flex", height: "100vh" }}>
-      <Box
-        sx={{
-          width: "50%",
-          bgcolor: "#171b36",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}>
-        <img src={logo1} alt="Logo" />
-      </Box>
-      <Container
-        component="main"
-        maxWidth="xs"
-        sx={{
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          padding: 4,
-        }}>
-        <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
-          <img src={logo2} alt="Logo" style={{ width: 50, marginRight: 8 }} />
-          <Typography component="h1" variant="h5">
-            Book Rent
-          </Typography>
-        </Box>
-        <Typography
-          component="h2"
-          variant="h6"
-          sx={{ mb: 2, borderBottom: "2px solid #f0f0f0" }}>
-          Signup as Owner
-        </Typography>
+      <LogoSection />
+      <AuthFormContainer title="Signup as Owner">
         {error && <Typography color="error">{error}</Typography>}
         <form onSubmit={handleSignup}>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            label="Full Name"
-            autoFocus
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            label="Email Address"
-            autoComplete="email"
-            value={email}
-            onChange={handleEmailChange}
-            onBlur={handleEmailBlur}
-            error={!!emailError}
-            helperText={emailError}
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
+          <AuthTextField label="Full Name" {...nameField} />
+          <AuthTextField label="Email Address" type="email" {...emailField} />
+          <AuthTextField
             label="Password"
             type="password"
+            {...passwordField}
             autoComplete="new-password"
-            value={password}
-            onChange={handlePasswordChange}
-            error={!!passwordError}
-            helperText={passwordError}
           />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
+          <AuthTextField
             label="Confirm Password"
             type="password"
+            {...confirmPasswordField}
             autoComplete="new-password"
-            value={confirmPassword}
-            onChange={handleConfirmPasswordChange}
-            onBlur={handleConfirmPasswordBlur}
-            error={!!passwordError}
-            helperText={passwordError}
           />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            label="Location"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            label="Phone Number"
-            value={phoneNumber}
-            onChange={(e) => setPhoneNumber(e.target.value)}
-          />
+          <AuthTextField label="Location" {...locationField} />
+          <AuthTextField label="Phone Number" {...phoneNumberField} />
           <FormControlLabel
             control={
               <Checkbox
@@ -238,14 +116,9 @@ function Signup() {
             }
             label="I accept the Terms and Conditions"
           />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2, bgcolor: "#00abff" }}
-            disabled={!isFormValid || loading}>
-            {loading ? <CircularProgress size={24} /> : "Sign Up"}
-          </Button>
+          <LoadingButton loading={loading} disabled={!isFormValid || loading}>
+            Sign Up
+          </LoadingButton>
           <Box sx={{ display: "flex", justifyContent: "center" }}>
             <Typography variant="body2">Already have an account?</Typography>
             <Link
@@ -258,7 +131,7 @@ function Signup() {
             </Link>
           </Box>
         </form>
-      </Container>
+      </AuthFormContainer>
     </Box>
   );
 }

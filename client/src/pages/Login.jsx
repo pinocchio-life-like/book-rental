@@ -1,55 +1,34 @@
 import { useState } from "react";
 import {
-  TextField,
-  Button,
-  Container,
-  Typography,
   Box,
-  Checkbox,
   FormControlLabel,
+  Checkbox,
+  Typography,
   Link,
-  CircularProgress,
 } from "@mui/material";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
-import logo1 from "../assets/logo1.svg";
-import logo2 from "../assets/logo2.svg";
 import useAuth from "../hooks/useAuth";
+import LogoSection from "../components/LogoSection";
+import AuthFormContainer from "../components/AuthFormContainer";
+import AuthTextField from "../components/AuthTextField";
+import LoadingButton from "../components/LoadingButton";
+import useEmailField from "../hooks/useEmailField";
+import usePasswordField from "../hooks/usePasswordField";
 
 function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [emailError, setEmailError] = useState(null);
+  const emailField = useEmailField("");
+  const passwordField = usePasswordField("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-    if (emailError) {
-      validateEmail(e.target.value);
-    }
-  };
-
-  const handleEmailBlur = () => {
-    validateEmail(email);
-  };
-
-  const validateEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setEmailError("Invalid email address");
-    } else {
-      setEmailError(null);
-    }
-  };
-
   const handleLogin = async (event) => {
     event.preventDefault();
-    if (!emailError) {
+    if (!emailField.error) {
       setLoading(true);
       try {
-        await login(email, password);
+        await login(emailField.value, passwordField.value);
         navigate("/dashboard");
       } catch (error) {
         setError(error.response ? error.response.data.message : "Login failed");
@@ -61,64 +40,22 @@ function Login() {
 
   return (
     <Box sx={{ display: "flex", height: "100vh" }}>
-      <Box
-        sx={{
-          width: "50%",
-          bgcolor: "#171b36",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}>
-        <img src={logo1} alt="Logo" />
-      </Box>
-      <Container
-        component="main"
-        maxWidth="xs"
-        sx={{
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          padding: 4,
-        }}>
-        <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
-          <img src={logo2} alt="Logo" style={{ width: 50, marginRight: 8 }} />
-          <Typography component="h1" variant="h5">
-            Book Rent
-          </Typography>
-        </Box>
-        <Typography
-          component="h2"
-          variant="h6"
-          sx={{ mb: 2, borderBottom: "2px solid #f0f0f0" }}>
-          Login
-        </Typography>
+      <LogoSection />
+      <AuthFormContainer title="Login">
         {error && <Typography color="error">{error}</Typography>}
         <form onSubmit={handleLogin}>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
+          <AuthTextField
             label="Email Address"
+            type="email"
+            {...emailField}
             autoComplete="email"
             autoFocus
-            value={email}
-            onChange={handleEmailChange}
-            onBlur={handleEmailBlur}
-            error={!!emailError}
-            helperText={emailError}
           />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
+          <AuthTextField
             label="Password"
             type="password"
+            {...passwordField}
             autoComplete="current-password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
           />
           <FormControlLabel
             control={
@@ -134,14 +71,11 @@ function Login() {
             }
             label="Remember me"
           />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2, bgcolor: "#00abff" }}
-            disabled={!!emailError || loading}>
-            {loading ? <CircularProgress size={24} /> : "Login"}
-          </Button>
+          <LoadingButton
+            loading={loading}
+            disabled={!!emailField.error || loading}>
+            Login
+          </LoadingButton>
           <Box sx={{ display: "flex", justifyContent: "center" }}>
             <Typography variant="body2">Havent got an account?</Typography>
             <Link
@@ -154,7 +88,7 @@ function Login() {
             </Link>
           </Box>
         </form>
-      </Container>
+      </AuthFormContainer>
     </Box>
   );
 }
