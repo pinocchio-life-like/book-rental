@@ -8,6 +8,7 @@ import {
   Checkbox,
   FormControlLabel,
   Link,
+  CircularProgress,
 } from "@mui/material";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import logo1 from "../assets/logo1.svg";
@@ -17,17 +18,44 @@ import useAuth from "../hooks/useAuth";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [emailError, setEmailError] = useState(null);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { login } = useAuth();
 
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+    if (emailError) {
+      validateEmail(e.target.value);
+    }
+  };
+
+  const handleEmailBlur = () => {
+    validateEmail(email);
+  };
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setEmailError("Invalid email address");
+    } else {
+      setEmailError(null);
+    }
+  };
+
   const handleLogin = async (event) => {
     event.preventDefault();
-    try {
-      await login(email, password);
-      navigate("/dashboard");
-    } catch (error) {
-      setError(error.response ? error.response.data.message : "Login failed");
+    if (!emailError) {
+      setLoading(true);
+      try {
+        await login(email, password);
+        navigate("/dashboard");
+      } catch (error) {
+        setError(error.response ? error.response.data.message : "Login failed");
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -76,7 +104,10 @@ function Login() {
             autoComplete="email"
             autoFocus
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={handleEmailChange}
+            onBlur={handleEmailBlur}
+            error={!!emailError}
+            helperText={emailError}
           />
           <TextField
             variant="outlined"
@@ -107,8 +138,9 @@ function Login() {
             type="submit"
             fullWidth
             variant="contained"
-            sx={{ mt: 3, mb: 2, bgcolor: "#00abff" }}>
-            Login
+            sx={{ mt: 3, mb: 2, bgcolor: "#00abff" }}
+            disabled={!!emailError || loading}>
+            {loading ? <CircularProgress size={24} /> : "Login"}
           </Button>
           <Box sx={{ display: "flex", justifyContent: "center" }}>
             <Typography variant="body2">Havent got an account?</Typography>

@@ -3,7 +3,10 @@ const AuthService = require("../services/authService");
 
 const signup = async (req, res) => {
   try {
-    const user = await User.create(req.body);
+    const user = await User.create({
+      ...req.body,
+      role: req.body.role || "user",
+    });
     const token = AuthService.generateToken(user);
     res.status(201).json({ user, token });
   } catch (error) {

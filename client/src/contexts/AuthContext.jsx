@@ -34,8 +34,14 @@ export const AuthProvider = ({ children }) => {
     setAuthState({ token: data.token, user: data.user });
   };
 
-  const signup = async (name, email, password) => {
-    const { data } = await signupService(name, email, password);
+  const signup = async (name, email, password, location, phone) => {
+    const { data } = await signupService(
+      name,
+      email,
+      password,
+      location,
+      phone
+    );
     localStorage.setItem("token", data.token);
     setAuthState({ token: data.token, user: data.user });
   };
