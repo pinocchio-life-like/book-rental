@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Box, List, Button } from "@mui/material";
 import { Logout as LogoutIcon } from "@mui/icons-material";
-import logo3 from "../assets/logo3.svg";
 import plusIcon from "../assets/plusIcon.svg";
 import dashboardIcon from "../assets/dashboardIcon.svg";
 import uploadIcon from "../assets/uploadIcon.svg";
@@ -30,6 +29,7 @@ const Sidebar = () => {
         p: 2,
         transition: "width 0.3s",
         borderRadius: "15px",
+        position: "relative",
       }}>
       <Box
         sx={{
@@ -102,7 +102,13 @@ const Sidebar = () => {
         startIcon={<LogoutIcon />}
         fullWidth={expanded}
         variant="contained"
-        sx={{ bgcolor: "#FFFFFF33", mt: "auto", mb: 2, bottom: 2 }}>
+        sx={{
+          bgcolor: "#FFFFFF33",
+          position: "absolute",
+          bottom: 100,
+          margin: "auto",
+          maxWidth: 240,
+        }}>
         {expanded ? "Logout" : ""}
       </Button>
     </Box>
