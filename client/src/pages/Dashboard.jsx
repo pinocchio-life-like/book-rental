@@ -8,7 +8,7 @@ import ChartCard from "../components/ChartCard";
 
 const Dashboard = () => {
   return (
-    <Box sx={{ display: "flex", height: "100vh" }}>
+    <Box sx={{ display: "flex", height: "100vh", padding: "12px 8px" }}>
       <Sidebar />
       <Box sx={{ flexGrow: 1, p: 3, bgcolor: "#f4f6f8" }}>
         <Header title="Owner / Dashboard" />
