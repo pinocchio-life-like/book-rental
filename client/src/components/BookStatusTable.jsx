@@ -60,7 +60,7 @@ const BookStatusTable = () => {
   ];
 
   return (
-    <TableContainer component={Paper}>
+    <TableContainer sx={{ borderRadius: "8px" }} component={Paper}>
       <Table>
         <TableHead>
           <TableRow>

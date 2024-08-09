@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import {
-  Card,
-  CardContent,
-  Typography,
-  Box,
-  MenuItem,
-  Select,
-} from "@mui/material";
+import { Card, CardContent, Typography, Box } from "@mui/material";
 import {
   Chart as ChartJS,
   ArcElement,
@@ -20,7 +13,7 @@ import {
   Legend,
   Filler,
 } from "chart.js";
-import { Pie, Line } from "react-chartjs-2";
+import { Doughnut, Line } from "react-chartjs-2";
 
 // Register Chart.js components
 ChartJS.register(
@@ -37,18 +30,15 @@ ChartJS.register(
 );
 
 const ChartCard = ({ title, data, type }) => {
-  const [period, setPeriod] = useState("Mar 2022 - Oct 2024");
-
-  const handlePeriodChange = (event) => {
-    setPeriod(event.target.value);
-  };
-
-  const pieData = {
+  const doughnutData = {
     labels: Object.keys(data),
     datasets: [
       {
         data: Object.values(data),
-        backgroundColor: ["#36A2EB", "#FF6384", "#FFCE56"],
+        backgroundColor: ["#006AFF", "#52C93F", "#FF2727"],
+        hoverBackgroundColor: ["#006AFF", "#52C93F", "#FF2727"],
+        borderColor: "#fff",
+        cutout: "75%", // Make the chart hollow
       },
     ],
   };
@@ -78,26 +68,20 @@ const ChartCard = ({ title, data, type }) => {
   const options = {
     scales: {
       x: {
-        grid: {
-          display: false,
-        },
+        display: false,
       },
       y: {
-        grid: {
-          display: true,
-          borderDash: [8, 4],
-        },
+        display: false,
       },
     },
     plugins: {
       legend: {
-        display: true,
-        position: "top",
+        display: false,
       },
       tooltip: {
         callbacks: {
           label: function (context) {
-            return `${context.dataset.label}: ${context.raw}k Birr`;
+            return `${context.dataset.label}: ${context.raw}`;
           },
         },
       },
@@ -105,7 +89,10 @@ const ChartCard = ({ title, data, type }) => {
   };
 
   return (
-    <Card>
+    <Card
+      sx={{
+        boxShadow: "0px 8px 10px #4545501A",
+      }}>
       <CardContent>
         <Box
           sx={{
@@ -113,20 +100,47 @@ const ChartCard = ({ title, data, type }) => {
             justifyContent: "space-between",
             alignItems: "center",
           }}>
-          <Typography variant="h6">{title}</Typography>
-          <Select
-            value={period}
-            onChange={handlePeriodChange}
-            size="small"
-            sx={{ ml: 2 }}>
-            <MenuItem value="Mar 2022 - Oct 2024">Mar 2022 - Oct 2024</MenuItem>
-            <MenuItem value="Jan 2021 - Dec 2023">Jan 2021 - Dec 2023</MenuItem>
-          </Select>
+          <Typography color={"#656575"} variant="h6">
+            {title}
+          </Typography>
+          <Typography
+            variant="subtitle2"
+            color="textSecondary"
+            sx={{ bgcolor: "#F4F5F7", px: 0.8 }}>
+            Today
+          </Typography>
         </Box>
-        {type === "pie" ? (
-          <Pie data={pieData} />
+        {type === "doughnut" ? (
+          <Doughnut
+            data={doughnutData}
+            options={options}
+            style={{ padding: 40 }}
+          />
         ) : (
           <Line data={lineData} options={options} />
+        )}
+        {type === "doughnut" && (
+          <Box sx={{ mt: 2 }}>
+            {Object.entries(data).map(([key, value], index) => (
+              <Box
+                key={index}
+                sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+                <Box
+                  sx={{
+                    width: 10,
+                    height: 10,
+                    bgcolor: ["#36A2EB", "#4CAF50", "#FF6384"][index],
+                    borderRadius: "50%",
+                    mr: 1,
+                  }}
+                />
+                <Typography variant="body2" sx={{ flexGrow: 1 }}>
+                  {key}
+                </Typography>
+                <Typography variant="body2">{value}</Typography>
+              </Box>
+            ))}
+          </Box>
         )}
       </CardContent>
     </Card>

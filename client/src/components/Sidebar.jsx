@@ -11,9 +11,11 @@ import ownersIcon from "../assets/ownersIcon.svg";
 import SidebarIconButton from "./SidebarIconButton";
 import SidebarLogo from "./SidebarLogo";
 import SidebarItem from "./SidebarItem";
+import useAuth from "../hooks/useAuth";
 
 const Sidebar = () => {
   const [expanded, setExpanded] = useState(true);
+  const { logout } = useAuth();
 
   const toggleSidebar = () => {
     setExpanded(!expanded);
@@ -101,6 +103,7 @@ const Sidebar = () => {
       <Button
         startIcon={<LogoutIcon />}
         fullWidth={expanded}
+        onClick={() => logout()}
         variant="contained"
         sx={{
           bgcolor: "#FFFFFF33",

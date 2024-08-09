@@ -1,6 +1,10 @@
+/* Import the Inter font from Google Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap");
+
 body {
   margin: 0;
   place-items: center;
   min-height: 100vh;
   background-color: #f0f2ff;
+  font-family: "Inter", sans-serif; /* Apply the Inter font */
 }
