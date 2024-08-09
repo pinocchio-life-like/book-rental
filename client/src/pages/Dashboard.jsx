@@ -7,7 +7,7 @@ import ChartCard from "../components/ChartCard";
 
 const Dashboard = () => {
   return (
-    <Box sx={{ display: "flex", height: "100vh", padding: "12px 8px" }}>
+    <Box sx={{ display: "flex", height: "100vh", padding: "12px 8px", mb: 5 }}>
       <Sidebar />
       <Box sx={{ flexGrow: 1, m: "0px 15px" }}>
         <Header title="Owner / Dashboard" />
@@ -51,19 +51,19 @@ const Dashboard = () => {
             </Paper>
           </Grid>
           <Grid item xs={12} md={9}>
-            <Box sx={{ mb: 3 }}>
+            <Box sx={{ mb: 2 }}>
               <BookStatusTable />
             </Box>
-            <Paper sx={{ p: 2 }}>
+            <Box width={"100%"}>
               <ChartCard
                 title="Earning Summary"
                 data={{
-                  "Last 6 months": [200, 300, 150, 400, 350, 300],
-                  "Same period last year": [100, 200, 130, 300, 250, 200],
+                  "Last 6 months": [230, 280, 220, 300, 250, 300],
+                  "Same period last year": [240, 260, 230, 280, 250, 270],
                 }}
                 type="line"
               />
-            </Paper>
+            </Box>
           </Grid>
         </Grid>
       </Box>

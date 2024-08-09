@@ -11,7 +11,7 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [authState, setAuthState] = useState({
     token: localStorage.getItem("token"),
-    user: null,
+    user: JSON.parse(localStorage.getItem("user")), // Load user from local storage
   });
 
   useEffect(() => {
@@ -30,6 +30,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     const { data } = await loginService(email, password);
     localStorage.setItem("token", data.token);
+    localStorage.setItem("user", JSON.stringify(data.user)); // Save user data in local storage
     setAuthToken(data.token);
     setAuthState({ token: data.token, user: data.user });
   };
@@ -43,11 +44,13 @@ export const AuthProvider = ({ children }) => {
       phone
     );
     localStorage.setItem("token", data.token);
+    localStorage.setItem("user", JSON.stringify(data.user)); // Save user data in local storage
     setAuthState({ token: data.token, user: data.user });
   };
 
   const logout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("user"); // Remove user data from local storage
     setAuthState({ token: null, user: null });
   };
 

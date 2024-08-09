@@ -6,10 +6,14 @@ import {
   CardActions,
   Button,
 } from "@mui/material";
-import { useAbility } from "../contexts/AbilityContext";
+import useAbility from "../hooks/useAbility";
 
 const BookCard = ({ book }) => {
   const ability = useAbility();
+
+  if (!ability) {
+    return null; // or some fallback UI
+  }
 
   return (
     <Card sx={{ maxWidth: 345 }}>

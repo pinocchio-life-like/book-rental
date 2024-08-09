@@ -12,10 +12,12 @@ import SidebarIconButton from "./SidebarIconButton";
 import SidebarLogo from "./SidebarLogo";
 import SidebarItem from "./SidebarItem";
 import useAuth from "../hooks/useAuth";
+import useAbility from "../hooks/useAbility";
 
 const Sidebar = () => {
   const [expanded, setExpanded] = useState(true);
   const { logout } = useAuth();
+  const ability = useAbility();
 
   const toggleSidebar = () => {
     setExpanded(!expanded);
@@ -49,24 +51,38 @@ const Sidebar = () => {
           text="Dashboard"
           expanded={expanded}
         />
-        <SidebarItem
-          to="/book-upload"
-          icon={uploadIcon}
-          text="Book Upload"
-          expanded={expanded}
-        />
-        <SidebarItem
-          to="/owners"
-          icon={ownersIcon}
-          text="Owners"
-          expanded={expanded}
-        />
-        <SidebarItem
-          to="/other1"
-          icon={plusIcon}
-          text="Other"
-          expanded={expanded}
-        />
+        {ability.can("manages", "Book") && (
+          <SidebarItem
+            to="/books"
+            icon={uploadIcon}
+            text="Books"
+            expanded={expanded}
+          />
+        )}
+        {ability.can("upload", "Book") && (
+          <SidebarItem
+            to="/book-upload"
+            icon={uploadIcon}
+            text="Book Upload"
+            expanded={expanded}
+          />
+        )}
+        {ability.can("manages", "Owners") && (
+          <SidebarItem
+            to="/owners"
+            icon={ownersIcon}
+            text="Owners"
+            expanded={expanded}
+          />
+        )}
+        {ability.can("upload", "Book") && (
+          <SidebarItem
+            to="/other1"
+            icon={plusIcon}
+            text="Other"
+            expanded={expanded}
+          />
+        )}
         <SidebarItem
           to="/other2"
           icon={plusIcon}
@@ -93,12 +109,22 @@ const Sidebar = () => {
           text="Setting"
           expanded={expanded}
         />
-        <SidebarItem
-          to="/admin-login"
-          icon={userIcon}
-          text="Login as Admin"
-          expanded={expanded}
-        />
+        {ability.can("upload", "Book") && (
+          <SidebarItem
+            to="/admin-login"
+            icon={userIcon}
+            text="Login as Admin"
+            expanded={expanded}
+          />
+        )}
+        {ability.cannot("upload", "Book") && (
+          <SidebarItem
+            to="/admin-login"
+            icon={userIcon}
+            text="Login as Owner"
+            expanded={expanded}
+          />
+        )}
       </List>
       <Button
         startIcon={<LogoutIcon />}
@@ -110,7 +136,7 @@ const Sidebar = () => {
           position: "absolute",
           bottom: 100,
           margin: "auto",
-          maxWidth: 240,
+          maxWidth: 238,
         }}>
         {expanded ? "Logout" : ""}
       </Button>

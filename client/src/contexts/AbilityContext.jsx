@@ -1,9 +1,9 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect } from "react";
 import { Ability } from "@casl/ability";
 import { defineAbilitiesFor } from "../utils/defineAbilities";
 import useAuth from "../hooks/useAuth";
 
-const AbilityContext = createContext();
+export const AbilityContext = createContext();
 
 export const AbilityProvider = ({ children }) => {
   const { user } = useAuth();
@@ -12,6 +12,8 @@ export const AbilityProvider = ({ children }) => {
   useEffect(() => {
     if (user) {
       setAbility(defineAbilitiesFor(user));
+    } else {
+      setAbility(new Ability()); // Provide a default or empty ability
     }
   }, [user]);
 
@@ -21,5 +23,3 @@ export const AbilityProvider = ({ children }) => {
     </AbilityContext.Provider>
   );
 };
-
-export const useAbility = () => useContext(AbilityContext);

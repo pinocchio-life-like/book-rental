@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Table,
   TableBody,
@@ -9,97 +8,212 @@ import {
   Paper,
   IconButton,
   Typography,
+  Avatar,
+  Box,
 } from "@mui/material";
+import { Can } from "@casl/react";
+import useAbility from "../hooks/useAbility";
+import SearchIcon from "@mui/icons-material/Search";
+import FilterListIcon from "@mui/icons-material/FilterList";
+import ViewListIcon from "@mui/icons-material/ViewList";
+import GridOnIcon from "@mui/icons-material/GridOn";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import rentedIcon from "../assets/rentedIcon.svg";
+import freeIcon from "../assets/freeIcon.svg";
+
+const owners = {
+  "Nardos T": "https://randomuser.me/api/portraits/women/44.jpg",
+  "Harry M": "https://randomuser.me/api/portraits/men/45.jpg",
+  "Tesfu N": "https://randomuser.me/api/portraits/men/46.jpg",
+};
+
+const rows = [
+  {
+    no: 1,
+    bookNo: "6465",
+    owner: "Nardos T",
+    status: "Rented",
+    price: "40 Birr",
+  },
+  {
+    no: 1,
+    bookNo: "6465",
+    owner: "Nardos T",
+    status: "Rented",
+    price: "40 Birr",
+  },
+  {
+    no: 1,
+    bookNo: "6465",
+    owner: "Nardos T",
+    status: "Rented",
+    price: "40 Birr",
+  },
+  {
+    no: 2,
+    bookNo: "5665",
+    owner: "Harry M",
+    status: "Free",
+    price: "0.0 Birr",
+  },
+  {
+    no: 2,
+    bookNo: "5665",
+    owner: "Harry M",
+    status: "Free",
+    price: "0.0 Birr",
+  },
+  {
+    no: 3,
+    bookNo: "1755",
+    owner: "Tesfu N",
+    status: "Free",
+    price: "0.0 Birr",
+  },
+  {
+    no: 3,
+    bookNo: "1755",
+    owner: "Tesfu N",
+    status: "Free",
+    price: "0.0 Birr",
+  },
+];
 
 const BookStatusTable = () => {
-  const rows = [
-    {
-      no: 1,
-      bookNo: "6465",
-      bookName: "Derto Gada",
-      status: "Rented",
-      price: "40 Birr",
-    },
-    {
-      no: 1,
-      bookNo: "6465",
-      bookName: "Fikr Eske Mekabr",
-      status: "Rented",
-      price: "40 Birr",
-    },
-    {
-      no: 1,
-      bookNo: "6465",
-      bookName: "The Power of Now",
-      status: "Rented",
-      price: "40 Birr",
-    },
-    {
-      no: 2,
-      bookNo: "5665",
-      bookName: "Derto Gada",
-      status: "Free",
-      price: "0.0 Birr",
-    },
-    {
-      no: 2,
-      bookNo: "5665",
-      bookName: "Derto Gada",
-      status: "Free",
-      price: "0.0 Birr",
-    },
-    {
-      no: 3,
-      bookNo: "1755",
-      bookName: "Derto Gada",
-      status: "Free",
-      price: "0.0 Birr",
-    },
-  ];
-
+  const ability = useAbility();
   return (
-    <TableContainer sx={{ borderRadius: "8px" }} component={Paper}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>No.</TableCell>
-            <TableCell>Book no.</TableCell>
-            <TableCell>Book Name</TableCell>
-            <TableCell>Status</TableCell>
-            <TableCell>Price</TableCell>
-            <TableCell>Action</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map((row) => (
-            <TableRow key={row.bookNo}>
-              <TableCell>{row.no}</TableCell>
-              <TableCell>{row.bookNo}</TableCell>
-              <TableCell>{row.bookName}</TableCell>
-              <TableCell>
-                <Typography
-                  sx={{
-                    color: row.status === "Rented" ? "red" : "blue",
-                  }}>
-                  {row.status}
-                </Typography>
-              </TableCell>
-              <TableCell>{row.price}</TableCell>
-              <TableCell>
-                <IconButton aria-label="edit" size="small" color="primary">
-                  <EditIcon fontSize="inherit" />
-                </IconButton>
-                <IconButton aria-label="delete" size="small" color="error">
-                  <DeleteIcon fontSize="inherit" />
-                </IconButton>
-              </TableCell>
+    <Box
+      sx={{
+        padding: 2,
+        borderRadius: "15px",
+        bgcolor: "#fff",
+        boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+      }}>
+      <Box sx={{ display: "flex", justifyContent: "right", mb: 2 }}>
+        <Box>
+          <IconButton>
+            <SearchIcon />
+          </IconButton>
+          <IconButton>
+            <FilterListIcon />
+          </IconButton>
+          <IconButton>
+            <ViewListIcon />
+          </IconButton>
+          <IconButton>
+            <GridOnIcon />
+          </IconButton>
+        </Box>
+      </Box>
+
+      <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+        <Typography variant="h6" color="text.primary">
+          Live Book Status
+        </Typography>
+      </Box>
+
+      <TableContainer
+        component={Paper}
+        sx={{
+          borderRadius: "8px",
+          boxShadow: "none",
+          mt: 0,
+          height: 295,
+          overflowY: "auto",
+          "&::-webkit-scrollbar": {
+            width: "4px",
+            opacity: "30%",
+          },
+          "&::-webkit-scrollbar-track": {
+            background: "#fff",
+          },
+          "&::-webkit-scrollbar-thumb": {
+            background: "#A3A3A3",
+            borderRadius: "4px",
+          },
+          "&::-webkit-scrollbar-thumb:hover": {
+            background: "#555",
+          },
+        }}>
+        <Table size="medium">
+          <TableHead>
+            <TableRow>
+              <TableCell sx={{ color: "#656575" }}>No.</TableCell>
+              <TableCell sx={{ color: "#656575" }}>Book no.</TableCell>
+              <TableCell sx={{ color: "#656575" }}>Owner</TableCell>
+              <TableCell sx={{ color: "#656575" }}>Status</TableCell>
+              <TableCell sx={{ color: "#656575" }}>Price</TableCell>
+              {ability.can("update", "Book") && (
+                <TableCell sx={{ color: "#656575" }}>Action</TableCell>
+              )}
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          </TableHead>
+          <TableBody>
+            {rows.map((row, index) => (
+              <TableRow key={index}>
+                <TableCell>{`0${row.no}`}</TableCell>
+                <TableCell>
+                  <Box
+                    sx={{
+                      backgroundColor: "#F4F5F7",
+                      padding: "2px 12px",
+                      borderRadius: "4px",
+                      display: "inline-block",
+                    }}>
+                    {row.bookNo}
+                  </Box>
+                </TableCell>
+                <TableCell>
+                  <Box sx={{ display: "flex", alignItems: "center" }}>
+                    <Avatar
+                      src={owners[row.owner]}
+                      alt={row.owner}
+                      sx={{ width: 24, height: 24, mr: 1 }}
+                    />
+                    <Typography>{row.owner}</Typography>
+                  </Box>
+                </TableCell>
+                <TableCell>
+                  <Box sx={{ display: "flex", alignItems: "center" }}>
+                    <Box
+                      component="img"
+                      src={row.status === "Rented" ? rentedIcon : freeIcon}
+                      alt={`${
+                        row.status === "Rented" ? "Rented" : "Free"
+                      } Icon`}
+                      sx={{ width: 16, height: 16, mr: 2 }}
+                    />
+                    <Typography
+                      sx={{
+                        color: "#656575",
+                      }}>
+                      {row.status}
+                    </Typography>
+                  </Box>
+                </TableCell>
+                <TableCell
+                  sx={{
+                    color: "#656575",
+                  }}>
+                  {row.price}
+                </TableCell>
+                {ability.can("update", "Book") && (
+                  <TableCell>
+                    <IconButton aria-label="edit" size="small">
+                      <EditIcon sx={{ color: "black" }} fontSize="inherit" />
+                    </IconButton>
+                    <IconButton aria-label="delete" size="small">
+                      <DeleteIcon sx={{ color: "red" }} fontSize="inherit" />
+                    </IconButton>
+                  </TableCell>
+                )}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Box>
   );
 };
 
