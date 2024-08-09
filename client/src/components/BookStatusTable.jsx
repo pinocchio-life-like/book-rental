@@ -23,9 +23,9 @@ import rentedIcon from "../assets/rentedIcon.svg";
 import freeIcon from "../assets/freeIcon.svg";
 
 const owners = {
-  "Nardos T": "https://randomuser.me/api/portraits/women/44.jpg",
-  "Harry M": "https://randomuser.me/api/portraits/men/45.jpg",
-  "Tesfu N": "https://randomuser.me/api/portraits/men/46.jpg",
+  "Nardos T": "https://randomuser.me/api/portraits/women/14.jpg",
+  "Harry M": "https://randomuser.me/api/portraits/men/24.jpg",
+  "Tesfu N": "https://randomuser.me/api/portraits/men/16.jpg",
 };
 
 const rows = [

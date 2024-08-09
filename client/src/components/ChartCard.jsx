@@ -240,12 +240,17 @@ const ChartCard = ({ title, data, type }) => {
             )}
           </Box>
         </Box>
-        <Box sx={{ height: 370, width: "100%" }}>
+        <Box
+          sx={{
+            height: type === "doughnut" ? "" : 370,
+            width: "100%",
+            display: "flex",
+          }}>
           {type === "doughnut" ? (
             <Doughnut
               data={doughnutData}
               options={doughnutOptions}
-              style={{ padding: "40px", marginTop: 20 }}
+              style={{ marginTop: 20 }}
             />
           ) : (
             <Line
@@ -257,7 +262,7 @@ const ChartCard = ({ title, data, type }) => {
           )}
         </Box>
         {type === "doughnut" && (
-          <Box sx={{ mb: 10, px: 2 }}>
+          <Box sx={{ my: 6, px: 2 }}>
             {Object.entries(data).map(([key, value], index) => (
               <Box
                 key={index}

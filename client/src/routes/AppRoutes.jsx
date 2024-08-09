@@ -3,11 +3,12 @@ import Home from "../pages/Home";
 import Login from "../pages/Login";
 import Signup from "../pages/Signup";
 import Dashboard from "../pages/Dashboard";
-import BookDetail from "../pages/BookDetail";
 import PrivateRoute from "../components/PrivateRoute";
 import PublicRoute from "../components/PublicRoute";
 import { AbilityProvider } from "../contexts/AbilityContext";
 import useAuth from "../hooks/useAuth";
+import Books from "../pages/Books";
+import Owners from "../pages/Owners";
 
 function AppRoutes() {
   const { user } = useAuth();
@@ -27,7 +28,8 @@ function AppRoutes() {
           {/* Private Routes */}
           <Route path="/" element={<PrivateRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/books/:id" element={<BookDetail />} />
+            <Route path="/books" element={<Books />} />
+            <Route path="/owners" element={<Owners />} />
           </Route>
         </Routes>
       </AbilityProvider>
