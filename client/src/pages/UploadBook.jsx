@@ -9,6 +9,7 @@ import {
   DialogContent,
   DialogTitle,
   Autocomplete,
+  MenuItem,
 } from "@mui/material";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
@@ -165,47 +166,135 @@ const Owners = () => {
         </Grid>
       </Box>
 
-      {/* Dialog for adding new book */}
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Add New Book</DialogTitle>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        PaperProps={{
+          sx: {
+            borderRadius: "16px",
+            padding: "24px 32px",
+            maxWidth: "400px",
+            margin: "auto",
+          },
+        }}>
+        <DialogTitle
+          sx={{
+            textAlign: "center",
+            fontWeight: "bold",
+            color: "#3A3A3C",
+            fontSize: "20px",
+            marginBottom: "16px",
+          }}>
+          Add Book
+        </DialogTitle>
         <DialogContent>
           <TextField
             label="Book Name"
             variant="outlined"
             fullWidth
-            sx={{ mb: 2 }}
+            sx={{
+              mt: 2,
+              marginBottom: "16px",
+              "& .MuiInputBase-root": {
+                borderRadius: "8px",
+              },
+              "& .MuiInputLabel-root": {
+                fontWeight: "500",
+                color: "#3A3A3C",
+              },
+              "& .MuiOutlinedInput-root": {
+                backgroundColor: "#F5F5F7",
+                "& fieldset": {
+                  borderColor: "#D9D9D9",
+                },
+                "&:hover fieldset": {
+                  borderColor: "#007bff",
+                },
+                "&.Mui-focused fieldset": {
+                  borderColor: "#007bff",
+                },
+              },
+            }}
           />
           <TextField
-            label="Author"
+            label="Author Name"
             variant="outlined"
             fullWidth
-            sx={{ mb: 2 }}
+            sx={{
+              marginBottom: "16px",
+              "& .MuiInputBase-root": {
+                borderRadius: "8px",
+              },
+              "& .MuiInputLabel-root": {
+                fontWeight: "500",
+                color: "#3A3A3C",
+              },
+              "& .MuiOutlinedInput-root": {
+                backgroundColor: "#F5F5F7",
+                "& fieldset": {
+                  borderColor: "#D9D9D9",
+                },
+                "&:hover fieldset": {
+                  borderColor: "#007bff",
+                },
+                "&.Mui-focused fieldset": {
+                  borderColor: "#007bff",
+                },
+              },
+            }}
           />
           <TextField
-            label="Book Quantity"
+            label="Category"
             variant="outlined"
             fullWidth
-            sx={{ mb: 2 }}
-          />
-          <TextField
-            label="Rent Price"
-            variant="outlined"
-            fullWidth
-            sx={{ mb: 2 }}
-          />
-          <Button
-            variant="outlined"
-            color="primary"
-            startIcon={<UploadFile />}
-            sx={{ mb: 3 }}>
-            Upload Book Cover
-          </Button>
+            select
+            sx={{
+              marginBottom: "24px",
+              "& .MuiInputBase-root": {
+                borderRadius: "8px",
+              },
+              "& .MuiInputLabel-root": {
+                fontWeight: "500",
+                color: "#3A3A3C",
+              },
+              "& .MuiOutlinedInput-root": {
+                backgroundColor: "#F5F5F7",
+                "& fieldset": {
+                  borderColor: "#D9D9D9",
+                },
+                "&:hover fieldset": {
+                  borderColor: "#007bff",
+                },
+                "&.Mui-focused fieldset": {
+                  borderColor: "#007bff",
+                },
+              },
+            }}>
+            <MenuItem value="Category 1">Category 1</MenuItem>
+            <MenuItem value="Category 2">Category 2</MenuItem>
+          </TextField>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleClose} color="primary">
+        <DialogActions
+          sx={{
+            justifyContent: "center",
+            paddingBottom: "24px",
+          }}>
+          <Button
+            variant="contained"
+            color="primary"
+            fullWidth
+            sx={{
+              backgroundColor: "#007bff",
+              borderRadius: "8px",
+              padding: "12px 0",
+              textTransform: "none",
+              fontWeight: "bold",
+              maxWidth: "280px",
+              "&:hover": {
+                backgroundColor: "#0056b3",
+              },
+            }}
+            onClick={handleClose}>
             Add
           </Button>
         </DialogActions>
