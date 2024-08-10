@@ -4,11 +4,11 @@ import {
   Typography,
   TextField,
   Button,
-  MenuItem,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
+  Autocomplete,
 } from "@mui/material";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
@@ -18,6 +18,7 @@ import { useState } from "react";
 
 const Owners = () => {
   const [open, setOpen] = useState(false);
+  const [selectedBook, setSelectedBook] = useState(null);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -26,6 +27,8 @@ const Owners = () => {
   const handleClose = () => {
     setOpen(false);
   };
+
+  const books = ["Book 1", "Book 2", "Add"];
 
   return (
     <Box sx={{ display: "flex", height: "100vh", padding: "12px 8px", mb: 5 }}>
@@ -46,31 +49,46 @@ const Owners = () => {
                 flexDirection: "column",
                 alignItems: "center",
               }}>
-              <Typography variant="h5" gutterBottom>
+              <Typography
+                sx={{ color: "#525256", lineHeight: "24px" }}
+                variant="h5"
+                gutterBottom>
                 Upload New Book
               </Typography>
 
-              <TextField
-                select
-                label="Search book by name or Author"
-                variant="outlined"
+              <Autocomplete
+                options={books}
                 fullWidth
                 sx={{ mt: 2, mb: 2, maxWidth: 300 }}
-                onChange={(e) => {
-                  if (e.target.value === "Add") {
+                value={selectedBook}
+                onChange={(event, newValue) => {
+                  setSelectedBook(newValue);
+                  if (newValue === "Add") {
                     handleClickOpen();
                   }
-                }}>
-                <MenuItem value="Book 1">Book 1</MenuItem>
-                <MenuItem
-                  sx={{ borderBottom: "1px solid #DEDEDE" }}
-                  value="Book 2">
-                  Book 2
-                </MenuItem>
-                <MenuItem sx={{ mt: 1, color: "#00ABFF" }} value="Add">
-                  Add
-                </MenuItem>
-              </TextField>
+                }}
+                renderOption={(props, option, { index }) => (
+                  <li
+                    {...props}
+                    style={{
+                      borderBottom:
+                        index === books.length - 2
+                          ? "1px solid #DEDEDE"
+                          : "none",
+                      marginTop: index === books.length - 1 ? 5 : 0,
+                      color: index === books.length - 1 ? "#00ABFF" : "black",
+                    }}>
+                    {option}
+                  </li>
+                )}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Search book by name or Author"
+                    variant="outlined"
+                  />
+                )}
+              />
 
               <Box
                 sx={{
