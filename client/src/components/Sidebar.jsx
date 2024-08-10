@@ -59,14 +59,14 @@ const Sidebar = () => {
             expanded={expanded}
           />
         )}
-        {ability.can("upload", "Book") && (
+        {/* {ability.can("upload", "Book") && ( */}
           <SidebarItem
             to="/book-upload"
             icon={uploadIcon}
             text="Book Upload"
             expanded={expanded}
           />
-        )}
+        {/* )} */}
         {ability.can("manages", "Owners") && (
           <SidebarItem
             to="/owners"

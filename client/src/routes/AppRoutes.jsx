@@ -9,6 +9,7 @@ import { AbilityProvider } from "../contexts/AbilityContext";
 import useAuth from "../hooks/useAuth";
 import Books from "../pages/Books";
 import Owners from "../pages/Owners";
+import UploadBook from "../pages/UploadBook";
 
 function AppRoutes() {
   const { user } = useAuth();
@@ -31,6 +32,7 @@ function AppRoutes() {
             <Route path="/books" element={<Books />} />
             <Route path="/owners" element={<Owners />} />
           </Route>
+          <Route path="/book-upload" element={<UploadBook />} />
         </Routes>
       </AbilityProvider>
     </Router>

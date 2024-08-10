@@ -1,7 +1,7 @@
 import { Box, Grid } from "@mui/material";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
-import BookStatusTable from "../components/BookStatusTable";
+import ApproveTable from "../components/ApproveTable";
 
 const Books = () => {
   return (
@@ -12,7 +12,7 @@ const Books = () => {
         <Grid container spacing={3}>
           <Grid item xs={12} md={12}>
             <Box sx={{ mb: 2 }}>
-              <BookStatusTable />
+              <ApproveTable />
             </Box>
           </Grid>
         </Grid>
