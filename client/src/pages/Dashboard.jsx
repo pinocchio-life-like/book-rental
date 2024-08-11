@@ -20,7 +20,7 @@ const Dashboard = () => {
                 flexDirection: "column",
                 borderRadius: "15px",
                 boxShadow: "none",
-                height: "85.6vh",
+                mb: 2,
               }}>
               <Box sx={{ marginBottom: "30px" }}>
                 <Typography

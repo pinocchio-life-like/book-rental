@@ -11,9 +11,9 @@ const AuthFormContainer = ({ title, children }) => (
       display: "flex",
       flexDirection: "column",
       justifyContent: "center",
-      padding: 4,
+      padding: 2,
     }}>
-    <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
+    <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
       <img src={logo2} alt="Logo" style={{ width: 50, marginRight: 8 }} />
       <Typography component="h1" variant="h5">
         Book Rent
@@ -22,7 +22,7 @@ const AuthFormContainer = ({ title, children }) => (
     <Typography
       component="h2"
       variant="h6"
-      sx={{ mb: 2, borderBottom: "2px solid #f0f0f0" }}>
+      sx={{ mb: 1, borderBottom: "2px solid #f0f0f0" }}>
       {title}
     </Typography>
     {children}

@@ -19,7 +19,7 @@ class User {
         hashedPassword,
         userData.location,
         userData.phone,
-        userData.role,
+        userData.type,
       ]
     );
     return result.rows[0];

@@ -35,13 +35,14 @@ export const AuthProvider = ({ children }) => {
     setAuthState({ token: data.token, user: data.user });
   };
 
-  const signup = async (name, email, password, location, phone) => {
+  const signup = async (name, email, password, location, phone, type) => {
     const { data } = await signupService(
       name,
       email,
       password,
       location,
-      phone
+      phone,
+      type
     );
     localStorage.setItem("token", data.token);
     localStorage.setItem("user", JSON.stringify(data.user)); // Save user data in local storage

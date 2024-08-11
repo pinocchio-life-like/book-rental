@@ -19,8 +19,8 @@ export const setAuthToken = (token) => {
 
 export const login = (email, password) =>
   api.post("/auth/login", { email, password });
-export const signup = (name, email, password, location, phone) =>
-  api.post("/auth/signup", { name, email, password, location, phone });
+export const signup = (name, email, password, location, phone, type) =>
+  api.post("/auth/signup", { name, email, password, location, phone, type });
 export const fetchBooks = () => api.get("/books");
 export const fetchBookById = (id) => api.get(`/books/${id}`);
 export const createBook = (bookData) => api.post("/books", bookData);

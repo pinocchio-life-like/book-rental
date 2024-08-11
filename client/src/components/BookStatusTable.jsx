@@ -119,7 +119,7 @@ const BookStatusTable = () => {
           borderRadius: "8px",
           boxShadow: "none",
           mt: 0,
-          height: 295,
+          maxHeight: 295,
           overflowY: "auto",
           "&::-webkit-scrollbar": {
             width: "4px",

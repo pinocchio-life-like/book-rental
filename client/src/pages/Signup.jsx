@@ -5,6 +5,7 @@ import {
   Checkbox,
   Typography,
   Link,
+  MenuItem,
 } from "@mui/material";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
@@ -24,6 +25,7 @@ function Signup() {
   const confirmPasswordField = useConfirmPasswordField(passwordField.value);
   const locationField = useFormField("");
   const phoneNumberField = useFormField("");
+  const userTypeField = useFormField(""); // New field for user type
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -39,6 +41,7 @@ function Signup() {
       confirmPasswordField.value &&
       locationField.value &&
       phoneNumberField.value &&
+      userTypeField.value && // Include user type in validation
       termsAccepted &&
       !nameField.error &&
       !emailField.error &&
@@ -53,6 +56,7 @@ function Signup() {
     confirmPasswordField,
     locationField,
     phoneNumberField,
+    userTypeField, // Include user type in dependencies
     termsAccepted,
   ]);
 
@@ -69,7 +73,8 @@ function Signup() {
         emailField.value,
         passwordField.value,
         locationField.value,
-        phoneNumberField.value
+        phoneNumberField.value,
+        userTypeField.value
       );
       navigate("/dashboard");
     } catch (error) {
@@ -138,6 +143,17 @@ function Signup() {
             error={phoneNumberField.error}
             helperText={phoneNumberField.error}
           />
+          <AuthTextField
+            label="User Type"
+            select
+            value={userTypeField.value}
+            onChange={userTypeField.handleChange}
+            onBlur={userTypeField.handleBlur}
+            error={userTypeField.error}
+            helperText={userTypeField.error}>
+            <MenuItem value="user">User</MenuItem>
+            <MenuItem value="owner">Owner</MenuItem>
+          </AuthTextField>
           <FormControlLabel
             control={
               <Checkbox

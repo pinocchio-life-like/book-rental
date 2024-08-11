@@ -242,7 +242,6 @@ const ChartCard = ({ title, data, type }) => {
         </Box>
         <Box
           sx={{
-            height: type === "doughnut" ? "" : 370,
             width: "100%",
             display: "flex",
           }}>
@@ -262,7 +261,7 @@ const ChartCard = ({ title, data, type }) => {
           )}
         </Box>
         {type === "doughnut" && (
-          <Box sx={{ my: 6, px: 2 }}>
+          <Box sx={{ my: 1, px: 2 }}>
             {Object.entries(data).map(([key, value], index) => (
               <Box
                 key={index}
