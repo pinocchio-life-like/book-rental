@@ -1,11 +1,22 @@
+const { z } = require("zod");
 const User = require("../models/user");
 const AuthService = require("../services/authService");
 
+const signupSchema = z.object({
+  name: z.string().max(255),
+  email: z.string().email().max(255),
+  password: z.string().min(6).max(255),
+  location: z.string().max(255),
+  phone: z.string().max(50),
+  type: z.string().optional(),
+});
+
 const signup = async (req, res) => {
   try {
+    const validatedData = signupSchema.parse(req.body);
     const user = await User.create({
-      ...req.body,
-      role: req.body.type || "user",
+      ...validatedData,
+      role: validatedData.type || "user",
     });
     const token = AuthService.generateToken(user);
     res.status(201).json({ user, token });
@@ -14,12 +25,21 @@ const signup = async (req, res) => {
   }
 };
 
+const loginSchema = z.object({
+  email: z.string().email().max(255),
+  password: z.string().min(6).max(255),
+});
+
 const login = async (req, res) => {
   try {
-    const user = await User.findByEmail(req.body.email);
+    const validatedData = loginSchema.parse(req.body);
+    const user = await User.findByEmail(validatedData.email);
     if (
       !user ||
-      !(await AuthService.validatePassword(req.body.password, user.password))
+      !(await AuthService.validatePassword(
+        validatedData.password,
+        user.password
+      ))
     ) {
       return res.status(401).json({ message: "Invalid credentials" });
     }

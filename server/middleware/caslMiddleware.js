@@ -18,7 +18,6 @@ const defineAbilitiesFor = (user) => {
 };
 
 const caslMiddleware = (req, res, next) => {
-  console.log("caslMiddleware user:", req.user);
   req.ability = defineAbilitiesFor(req.user);
   next();
 };

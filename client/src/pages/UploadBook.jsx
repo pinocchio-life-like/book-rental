@@ -52,7 +52,12 @@ const Owners = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await createBook(bookData);
+      const combinedData =
+        selectedBook === newBookData.title
+          ? { ...bookData, ...newBookData }
+          : bookData;
+
+      await createBook(combinedData);
       alert("Book uploaded successfully!");
     } catch (error) {
       alert("Error uploading book");
@@ -61,8 +66,8 @@ const Owners = () => {
 
   const handleAddNewBook = async (e) => {
     e.preventDefault();
-    console.log(newBookData);
-    alert(`Adding new book: ${newBookData.title}`);
+    setSelectedBook(newBookData.title);
+    books.push(newBookData.title);
     setOpen(false);
   };
 
@@ -333,6 +338,7 @@ const Owners = () => {
               onChange={handleNewBookChange}>
               <MenuItem value="Category 1">Category 1</MenuItem>
               <MenuItem value="Category 2">Category 2</MenuItem>
+              {/* Add more categories as needed */}
             </TextField>
           </DialogContent>
           <DialogActions

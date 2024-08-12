@@ -28,6 +28,7 @@ const getBook = async (req, res) => {
 };
 
 const createBook = async (req, res) => {
+  console.log("hhhhhhhhhhhhhh", req.body);
   try {
     const validatedData = bookSchema.parse(req.body);
     if (req.ability.can("create", "Book")) {
