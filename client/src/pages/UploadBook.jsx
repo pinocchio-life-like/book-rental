@@ -14,13 +14,16 @@ import {
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import fileUploadIcon from "../assets/fileUploadIcon.svg";
-import { useState, useEffect } from "react";
-import { createBook, getCategories } from "../services/api";
+import { useState } from "react";
+import { createBook } from "../services/api";
+import useCategories from "../hooks/useCategories";
+import useDialog from "../hooks/useDialog";
 
 const Owners = () => {
-  const [open, setOpen] = useState(false);
+  const { categories, loading, error } = useCategories();
+  const { open, handleClickOpen, handleClose } = useDialog();
+
   const [selectedBook, setSelectedBook] = useState(null);
-  const [categories, setCategories] = useState([]);
   const [bookData, setBookData] = useState({
     bookQuantity: "",
     rentPrice: "",
@@ -31,27 +34,6 @@ const Owners = () => {
     author: "",
     category: "",
   });
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const fetchedCategories = await getCategories();
-        console.log(fetchedCategories);
-        setCategories(fetchedCategories.data);
-      } catch (error) {
-        console.error("Failed to fetch categories:", error);
-      }
-    };
-    fetchCategories();
-  }, []);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
 
   const books = ["Book 1", "Book 2", "Add"];
 
@@ -82,7 +64,7 @@ const Owners = () => {
     e.preventDefault();
     setSelectedBook(newBookData.title);
     books.push(newBookData.title);
-    setOpen(false);
+    handleClose();
   };
 
   return (
@@ -111,126 +93,132 @@ const Owners = () => {
                 Upload New Book
               </Typography>
 
-              <form
-                onSubmit={handleSubmit}
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}>
-                <Autocomplete
-                  options={books}
-                  fullWidth
-                  sx={{ mt: 2, mb: 2, maxWidth: 300 }}
-                  value={selectedBook}
-                  onChange={(event, newValue) => {
-                    setSelectedBook(newValue);
-                    if (newValue === "Add") {
-                      handleClickOpen();
-                    }
-                  }}
-                  renderOption={(props, option, { index }) => (
-                    <li
-                      {...props}
-                      style={{
-                        borderBottom:
-                          index === books.length - 2
-                            ? "1px solid #DEDEDE"
-                            : "none",
-                        marginTop: index === books.length - 1 ? 5 : 0,
-                        color: index === books.length - 1 ? "#00ABFF" : "black",
-                      }}>
-                      {option}
-                    </li>
-                  )}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Search book by name or Author"
-                      variant="outlined"
-                    />
-                  )}
-                />
+              {loading && <p>Loading categories...</p>}
+              {error && <p>{error}</p>}
 
-                <Box
-                  sx={{
+              {!loading && !error && (
+                <form
+                  onSubmit={handleSubmit}
+                  style={{
                     display: "flex",
-                    flexDirection: "row",
+                    justifyContent: "center",
+                    flexDirection: "column",
                     alignItems: "center",
-                    gap: 5,
-                    mt: 18,
                   }}>
-                  <TextField
-                    label="Book Quantity"
-                    variant="outlined"
+                  <Autocomplete
+                    options={books}
                     fullWidth
-                    type="number"
-                    inputProps={{ min: 1 }}
-                    sx={{ mb: 2, width: 300 }}
-                    name="bookQuantity"
-                    value={bookData.bookQuantity}
-                    onChange={handleBookChange}
+                    sx={{ mt: 2, mb: 2, maxWidth: 300 }}
+                    value={selectedBook}
+                    onChange={(event, newValue) => {
+                      setSelectedBook(newValue);
+                      if (newValue === "Add") {
+                        handleClickOpen();
+                      }
+                    }}
+                    renderOption={(props, option, { index }) => (
+                      <li
+                        {...props}
+                        style={{
+                          borderBottom:
+                            index === books.length - 2
+                              ? "1px solid #DEDEDE"
+                              : "none",
+                          marginTop: index === books.length - 1 ? 5 : 0,
+                          color:
+                            index === books.length - 1 ? "#00ABFF" : "black",
+                        }}>
+                        {option}
+                      </li>
+                    )}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Search book by name or Author"
+                        variant="outlined"
+                      />
+                    )}
                   />
-                  <TextField
-                    label="Rent price for 2 weeks"
-                    variant="outlined"
-                    fullWidth
-                    type="number"
-                    inputProps={{ min: 0 }}
-                    sx={{ mb: 2, width: 300 }}
-                    name="rentPrice"
-                    value={bookData.rentPrice}
-                    onChange={handleBookChange}
-                  />
-                </Box>
 
-                <Button
-                  variant="outlined"
-                  startIcon={
-                    <Box
-                      component="img"
-                      src={fileUploadIcon}
-                      alt={"Upload Icon"}
-                      sx={{
-                        width: 16,
-                        height: 16,
-                        mr: 1,
-                      }}
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center",
+                      gap: 5,
+                      mt: 18,
+                    }}>
+                    <TextField
+                      label="Book Quantity"
+                      variant="outlined"
+                      fullWidth
+                      type="number"
+                      inputProps={{ min: 1 }}
+                      sx={{ mb: 2, width: 300 }}
+                      name="bookQuantity"
+                      value={bookData.bookQuantity}
+                      onChange={handleBookChange}
                     />
-                  }
-                  sx={{
-                    mb: 3,
-                    mt: 5,
-                    color: "#00ABFF",
-                    border: "none",
-                    fontWeight: 600,
-                    "&:hover": {
-                      border: "none",
-                    },
-                  }}>
-                  Upload Book Cover
-                </Button>
+                    <TextField
+                      label="Rent price for 2 weeks"
+                      variant="outlined"
+                      fullWidth
+                      type="number"
+                      inputProps={{ min: 0 }}
+                      sx={{ mb: 2, width: 300 }}
+                      name="rentPrice"
+                      value={bookData.rentPrice}
+                      onChange={handleBookChange}
+                    />
+                  </Box>
 
-                <Button
-                  type="submit"
-                  variant="contained"
-                  color="primary"
-                  sx={{
-                    bgcolor: "#00ABFF",
-                    color: "#fff",
-                    "&:hover": {
-                      bgcolor: "#0056b3",
-                    },
-                    borderRadius: "18px",
-                    maxWidth: 200,
-                    mt: 5,
-                    py: 3,
-                    px: 20,
-                  }}>
-                  Submit
-                </Button>
-              </form>
+                  <Button
+                    variant="outlined"
+                    startIcon={
+                      <Box
+                        component="img"
+                        src={fileUploadIcon}
+                        alt={"Upload Icon"}
+                        sx={{
+                          width: 16,
+                          height: 16,
+                          mr: 1,
+                        }}
+                      />
+                    }
+                    sx={{
+                      mb: 3,
+                      mt: 5,
+                      color: "#00ABFF",
+                      border: "none",
+                      fontWeight: 600,
+                      "&:hover": {
+                        border: "none",
+                      },
+                    }}>
+                    Upload Book Cover
+                  </Button>
+
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                    sx={{
+                      bgcolor: "#00ABFF",
+                      color: "#fff",
+                      "&:hover": {
+                        bgcolor: "#0056b3",
+                      },
+                      borderRadius: "18px",
+                      maxWidth: 200,
+                      mt: 5,
+                      py: 3,
+                      px: 20,
+                    }}>
+                    Submit
+                  </Button>
+                </form>
+              )}
             </Box>
           </Grid>
         </Grid>
