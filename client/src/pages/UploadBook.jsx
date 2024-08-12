@@ -14,12 +14,13 @@ import {
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import fileUploadIcon from "../assets/fileUploadIcon.svg";
-import { useState } from "react";
-import { createBook } from "../services/api";
+import { useState, useEffect } from "react";
+import { createBook, getCategories } from "../services/api";
 
 const Owners = () => {
   const [open, setOpen] = useState(false);
   const [selectedBook, setSelectedBook] = useState(null);
+  const [categories, setCategories] = useState([]);
   const [bookData, setBookData] = useState({
     bookQuantity: "",
     rentPrice: "",
@@ -30,6 +31,19 @@ const Owners = () => {
     author: "",
     category: "",
   });
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const fetchedCategories = await getCategories();
+        console.log(fetchedCategories);
+        setCategories(fetchedCategories.data);
+      } catch (error) {
+        console.error("Failed to fetch categories:", error);
+      }
+    };
+    fetchCategories();
+  }, []);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -336,9 +350,11 @@ const Owners = () => {
               name="category"
               value={newBookData.category}
               onChange={handleNewBookChange}>
-              <MenuItem value="Category 1">Category 1</MenuItem>
-              <MenuItem value="Category 2">Category 2</MenuItem>
-              {/* Add more categories as needed */}
+              {categories.map((category) => (
+                <MenuItem key={category.id} value={category.name}>
+                  {category.name}
+                </MenuItem>
+              ))}
             </TextField>
           </DialogContent>
           <DialogActions

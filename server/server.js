@@ -6,6 +6,7 @@ const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 const bookRoutes = require("./routes/bookRoutes");
 const rentalRoutes = require("./routes/rentalRoutes");
+const categoryRoutes = require("./routes/categoryRoutes");
 
 const { handleErrors } = require("./utils/errorHandler");
 const { protect } = require("./middleware/authMiddleware");
@@ -15,10 +16,11 @@ app.use(express.json());
 
 app.use(cors());
 
-app.use("/api", authRoutes);
-app.use("/api", protect, userRoutes);
-app.use("/api", protect, bookRoutes);
-app.use("/api", protect, rentalRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/users", protect, userRoutes);
+app.use("/api/books", protect, bookRoutes);
+app.use("/api/rentals", protect, rentalRoutes);
+app.use("/api/categories", protect, categoryRoutes);
 
 app.use(handleErrors);
 

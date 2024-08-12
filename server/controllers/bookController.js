@@ -29,7 +29,7 @@ const getBook = async (req, res) => {
 };
 
 const createBook = async (req, res) => {
-  console.log("Received data:", req.body);
+  console.log(req.body);
   try {
     const { category, ...otherData } = req.body;
 

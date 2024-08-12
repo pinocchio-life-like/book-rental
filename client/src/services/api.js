@@ -18,13 +18,15 @@ export const setAuthToken = (token) => {
 };
 
 export const login = (email, password) =>
-  api.post("/login", { email, password });
+  api.post("/auth/login", { email, password });
 export const signup = (name, email, password, location, phone, type) =>
-  api.post("/signup", { name, email, password, location, phone, type });
-export const fetchBooks = () => api.get("/books");
-export const fetchBookById = (id) => api.get(`/books/${id}`);
-export const createBook = (bookData) => api.post("/books", bookData);
-export const updateBook = (id, bookData) => api.put(`/books/${id}`, bookData);
-export const deleteBook = (id) => api.delete(`/books/${id}`);
+  api.post("/auth/signup", { name, email, password, location, phone, type });
+export const fetchBooks = () => api.get("/books/books");
+export const fetchBookById = (id) => api.get(`/books/books/${id}`);
+export const createBook = (bookData) => api.post("/books/books", bookData);
+export const updateBook = (id, bookData) =>
+  api.put(`/books/books/${id}`, bookData);
+export const deleteBook = (id) => api.delete(`/books/books/${id}`);
+export const getCategories = () => api.get("/categories/categories");
 
 export default api;
