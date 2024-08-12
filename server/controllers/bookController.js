@@ -1,6 +1,7 @@
 const Book = require("../models/book");
 const { ForbiddenError } = require("@casl/ability");
 const { z } = require("zod");
+const { getCategoryByName } = require("./categoriesController");
 
 const bookSchema = z.object({
   title: z.string().max(255),
@@ -28,9 +29,23 @@ const getBook = async (req, res) => {
 };
 
 const createBook = async (req, res) => {
-  console.log("hhhhhhhhhhhhhh", req.body);
+  console.log("Received data:", req.body);
   try {
-    const validatedData = bookSchema.parse(req.body);
+    const { category, ...otherData } = req.body;
+
+    const categoryId = await getCategoryByName(category);
+    if (!categoryId) {
+      return res.status(400).json({ error: "Invalid category" });
+    }
+
+    const bookData = {
+      ...otherData,
+      categoryId,
+      ownerId: req.user.id,
+    };
+
+    const validatedData = bookSchema.parse(bookData);
+
     if (req.ability.can("create", "Book")) {
       const book = await Book.create(validatedData);
       res.json(book);
@@ -38,6 +53,7 @@ const createBook = async (req, res) => {
       throw new ForbiddenError("Access denied");
     }
   } catch (error) {
+    console.error("Error creating book:", error);
     res.status(500).json({ error: error.message });
   }
 };

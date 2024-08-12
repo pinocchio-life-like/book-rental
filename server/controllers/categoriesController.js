@@ -9,4 +9,11 @@ const getCategories = async (req, res) => {
   }
 };
 
-module.exports = { getCategories };
+const getCategoryByName = async (categoryName) => {
+  const result = await db.query("SELECT id FROM categories WHERE name = $1", [
+    categoryName,
+  ]);
+  return result.rows[0]?.id || null; // Return the id if found, otherwise null
+};
+
+module.exports = { getCategories, getCategoryByName };
