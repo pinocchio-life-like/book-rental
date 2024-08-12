@@ -141,7 +141,12 @@ const BookStatusTable = () => {
             <TableRow>
               <TableCell sx={{ color: "#656575" }}>No.</TableCell>
               <TableCell sx={{ color: "#656575" }}>Book no.</TableCell>
-              <TableCell sx={{ color: "#656575" }}>Owner</TableCell>
+              {ability.can("manages", "Owners") && (
+                <TableCell sx={{ color: "#656575" }}>Owner</TableCell>
+              )}
+              {ability.can("update", "Book") && (
+                <TableCell sx={{ color: "#656575" }}>Book Name</TableCell>
+              )}
               <TableCell sx={{ color: "#656575" }}>Status</TableCell>
               <TableCell sx={{ color: "#656575" }}>Price</TableCell>
               {ability.can("update", "Book") && (

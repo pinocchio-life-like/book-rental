@@ -13,7 +13,7 @@ export function defineAbilitiesFor(user) {
     can("manages", "Owners", { ownerId: user.id });
   }
   // Book owner permissions
-  else if (user.role === "user") {
+  else if (user.role === "owner") {
     can("read", "Book", { ownerId: user.id }); // Owners can read only their own books
     can("create", "Book"); // Owners can create new books
     can("update", "Book", { ownerId: user.id }); // Owners can update only their own books

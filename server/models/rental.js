@@ -25,6 +25,18 @@ class Rental {
     );
     return result.rows[0];
   }
+
+  static async findById(id) {
+    const result = await db.query("SELECT * FROM rentals WHERE id = $1", [id]);
+    return result.rows[0];
+  }
+
+  static async findByUserId(userId) {
+    const result = await db.query("SELECT * FROM rentals WHERE userId = $1", [
+      userId,
+    ]);
+    return result.rows;
+  }
 }
 
 module.exports = Rental;

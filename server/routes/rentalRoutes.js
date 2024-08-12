@@ -1,10 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const { rentBook, returnBook } = require("../controllers/rentalController");
+const {
+  createRental,
+  returnRental,
+} = require("../controllers/rentalController");
 const { protect } = require("../middleware/authMiddleware");
 
-router.post("/rent", protect, rentBook);
+router.post("/rent", protect, createRental);
 
-router.post("/return/:rentalId", protect, returnBook);
+router.post("/return/:rentalId", protect, returnRental);
 
 module.exports = router;

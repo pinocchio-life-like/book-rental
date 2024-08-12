@@ -7,7 +7,7 @@ const defineAbilitiesFor = (user) => {
     case "admin":
       can("manage", "all");
       break;
-    case "book_owner":
+    case "owner":
       can(["read", "create", "update", "delete"], "Book", { ownerId: user.id });
       break;
     default:
@@ -18,6 +18,7 @@ const defineAbilitiesFor = (user) => {
 };
 
 const caslMiddleware = (req, res, next) => {
+  console.log("caslMiddleware user:", req.user);
   req.ability = defineAbilitiesFor(req.user);
   next();
 };

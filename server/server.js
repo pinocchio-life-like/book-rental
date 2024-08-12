@@ -15,10 +15,10 @@ app.use(express.json());
 
 app.use(cors());
 
-app.use("/api/auth", authRoutes);
-app.use("/api/users", protect, userRoutes);
-app.use("/api/books", protect, bookRoutes);
-app.use("/api/rentals", protect, rentalRoutes);
+app.use("/api", authRoutes);
+app.use("/api", protect, userRoutes);
+app.use("/api", protect, bookRoutes);
+app.use("/api", protect, rentalRoutes);
 
 app.use(handleErrors);
 
