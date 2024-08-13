@@ -40,7 +40,6 @@ const Owners = () => {
     category: "",
   });
 
-  // Fetch books from backend
   useEffect(() => {
     const fetchBookData = async () => {
       try {
@@ -67,10 +66,8 @@ const Owners = () => {
 
     let finalBookData;
     if (selectedBook === "Add") {
-      // Use the data from the add new book dialog
       finalBookData = { ...bookData, ...newBookData };
     } else {
-      // Use the data from the selected existing book
       finalBookData = {
         ...bookData,
         title: selectedBook.title,
@@ -89,12 +86,19 @@ const Owners = () => {
 
   const handleAddNewBook = async (e) => {
     e.preventDefault();
-    setSelectedBook("Add");
-    books.push({
+
+    const newBook = {
       title: newBookData.title,
       author: newBookData.author,
       category: newBookData.category,
-    });
+    };
+
+    // Add the new book to the books array
+    setBooks([...books, newBook]);
+
+    // Set the selected book to the newly created book object
+    setSelectedBook(newBook);
+
     handleClose();
   };
 
@@ -124,7 +128,7 @@ const Owners = () => {
                 Upload New Book
               </Typography>
 
-              {categoriesLoading && <p>Loading categories...</p>}
+              {categoriesLoading && <p>Loading ...</p>}
               {categoriesError && <p>{categoriesError}</p>}
 
               {!categoriesLoading && !categoriesError && (
@@ -138,12 +142,19 @@ const Owners = () => {
                   }}>
                   <Autocomplete
                     options={[
-                      ...books,
+                      ...books.filter(
+                        (book, index, self) =>
+                          index ===
+                          self.findIndex(
+                            (b) =>
+                              b.title === book.title && b.author === book.author
+                          )
+                      ),
                       { title: "Add", author: "", category: "" },
                     ]}
                     fullWidth
                     getOptionLabel={(option) =>
-                      `${option.title} - ${option.author}`
+                      `${option.title} ${option.author}`
                     }
                     sx={{ mt: 2, mb: 2, maxWidth: 300 }}
                     value={selectedBook}
@@ -158,14 +169,14 @@ const Owners = () => {
                       <li
                         {...props}
                         style={{
-                          borderBottom:
+                          borderTop:
                             index === books.length - 1
                               ? "1px solid #DEDEDE"
                               : "none",
                           marginTop: index === books.length ? 5 : 0,
                           color: option.title === "Add" ? "#00ABFF" : "black",
                         }}>
-                        {option.title} - {option.author}
+                        {option.title} {option.author}
                       </li>
                     )}
                     renderInput={(params) => (

@@ -38,7 +38,6 @@ const getBookById = async (req, res) => {
 };
 
 const createBook = async (req, res) => {
-  console.log(req.body);
   try {
     const { category, rentPrice, bookQuantity, ...otherData } = req.body;
 

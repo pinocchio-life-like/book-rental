@@ -12,7 +12,6 @@ const useCategories = () => {
         const fetchedCategories = await getCategories();
         setCategories(fetchedCategories.data);
         setError(null);
-        console.log(fetchedCategories.data);
       } catch (error) {
         setError("Failed to fetch categories");
         console.error(error);

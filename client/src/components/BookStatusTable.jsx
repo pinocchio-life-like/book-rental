@@ -11,7 +11,6 @@ import {
   Avatar,
   Box,
 } from "@mui/material";
-import { Can } from "@casl/react";
 import useAbility from "../hooks/useAbility";
 import SearchIcon from "@mui/icons-material/Search";
 import FilterListIcon from "@mui/icons-material/FilterList";
@@ -35,48 +34,6 @@ const rows = [
     owner: "Nardos T",
     status: "Rented",
     price: "40 Birr",
-  },
-  {
-    no: 1,
-    bookNo: "6465",
-    owner: "Nardos T",
-    status: "Rented",
-    price: "40 Birr",
-  },
-  {
-    no: 1,
-    bookNo: "6465",
-    owner: "Nardos T",
-    status: "Rented",
-    price: "40 Birr",
-  },
-  {
-    no: 2,
-    bookNo: "5665",
-    owner: "Harry M",
-    status: "Free",
-    price: "0.0 Birr",
-  },
-  {
-    no: 2,
-    bookNo: "5665",
-    owner: "Harry M",
-    status: "Free",
-    price: "0.0 Birr",
-  },
-  {
-    no: 3,
-    bookNo: "1755",
-    owner: "Tesfu N",
-    status: "Free",
-    price: "0.0 Birr",
-  },
-  {
-    no: 3,
-    bookNo: "1755",
-    owner: "Tesfu N",
-    status: "Free",
-    price: "0.0 Birr",
   },
 ];
 
