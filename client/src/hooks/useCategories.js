@@ -9,10 +9,9 @@ const useCategories = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        // Fetch categories using the getCategories function
         const fetchedCategories = await getCategories();
         setCategories(fetchedCategories.data);
-        setError(null); // Reset the error if the request is successful
+        setError(null);
         console.log(fetchedCategories.data);
       } catch (error) {
         setError("Failed to fetch categories");
@@ -21,7 +20,6 @@ const useCategories = () => {
         setLoading(false);
       }
     };
-
     fetchCategories();
   }, []);
 

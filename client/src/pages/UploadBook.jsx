@@ -14,16 +14,21 @@ import {
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import fileUploadIcon from "../assets/fileUploadIcon.svg";
-import { useState } from "react";
-import { createBook } from "../services/api";
+import { useState, useEffect } from "react";
+import { createBook, fetchBooks } from "../services/api";
 import useCategories from "../hooks/useCategories";
 import useDialog from "../hooks/useDialog";
 
 const Owners = () => {
-  const { categories, loading, error } = useCategories();
+  const {
+    categories,
+    loading: categoriesLoading,
+    error: categoriesError,
+  } = useCategories();
   const { open, handleClickOpen, handleClose } = useDialog();
 
   const [selectedBook, setSelectedBook] = useState(null);
+  const [books, setBooks] = useState([]);
   const [bookData, setBookData] = useState({
     bookQuantity: "",
     rentPrice: "",
@@ -35,7 +40,19 @@ const Owners = () => {
     category: "",
   });
 
-  const books = ["Book 1", "Book 2", "Add"];
+  // Fetch books from backend
+  useEffect(() => {
+    const fetchBookData = async () => {
+      try {
+        const response = await fetchBooks();
+        setBooks(response.data);
+      } catch (error) {
+        console.error("Error fetching books", error);
+      }
+    };
+
+    fetchBookData();
+  }, []);
 
   const handleBookChange = (e) => {
     setBookData({ ...bookData, [e.target.name]: e.target.value });
@@ -47,13 +64,23 @@ const Owners = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const combinedData =
-        selectedBook === newBookData.title
-          ? { ...bookData, ...newBookData }
-          : bookData;
 
-      await createBook(combinedData);
+    let finalBookData;
+    if (selectedBook === "Add") {
+      // Use the data from the add new book dialog
+      finalBookData = { ...bookData, ...newBookData };
+    } else {
+      // Use the data from the selected existing book
+      finalBookData = {
+        ...bookData,
+        title: selectedBook.title,
+        author: selectedBook.author,
+        category: selectedBook.category,
+      };
+    }
+
+    try {
+      await createBook(finalBookData);
       alert("Book uploaded successfully!");
     } catch (error) {
       alert("Error uploading book");
@@ -62,8 +89,12 @@ const Owners = () => {
 
   const handleAddNewBook = async (e) => {
     e.preventDefault();
-    setSelectedBook(newBookData.title);
-    books.push(newBookData.title);
+    setSelectedBook("Add");
+    books.push({
+      title: newBookData.title,
+      author: newBookData.author,
+      category: newBookData.category,
+    });
     handleClose();
   };
 
@@ -93,10 +124,10 @@ const Owners = () => {
                 Upload New Book
               </Typography>
 
-              {loading && <p>Loading categories...</p>}
-              {error && <p>{error}</p>}
+              {categoriesLoading && <p>Loading categories...</p>}
+              {categoriesError && <p>{categoriesError}</p>}
 
-              {!loading && !error && (
+              {!categoriesLoading && !categoriesError && (
                 <form
                   onSubmit={handleSubmit}
                   style={{
@@ -106,14 +137,21 @@ const Owners = () => {
                     alignItems: "center",
                   }}>
                   <Autocomplete
-                    options={books}
+                    options={[
+                      ...books,
+                      { title: "Add", author: "", category: "" },
+                    ]}
                     fullWidth
+                    getOptionLabel={(option) =>
+                      `${option.title} - ${option.author}`
+                    }
                     sx={{ mt: 2, mb: 2, maxWidth: 300 }}
                     value={selectedBook}
                     onChange={(event, newValue) => {
-                      setSelectedBook(newValue);
-                      if (newValue === "Add") {
+                      if (newValue.title === "Add") {
                         handleClickOpen();
+                      } else {
+                        setSelectedBook(newValue);
                       }
                     }}
                     renderOption={(props, option, { index }) => (
@@ -121,14 +159,13 @@ const Owners = () => {
                         {...props}
                         style={{
                           borderBottom:
-                            index === books.length - 2
+                            index === books.length - 1
                               ? "1px solid #DEDEDE"
                               : "none",
-                          marginTop: index === books.length - 1 ? 5 : 0,
-                          color:
-                            index === books.length - 1 ? "#00ABFF" : "black",
+                          marginTop: index === books.length ? 5 : 0,
+                          color: option.title === "Add" ? "#00ABFF" : "black",
                         }}>
-                        {option}
+                        {option.title} - {option.author}
                       </li>
                     )}
                     renderInput={(params) => (

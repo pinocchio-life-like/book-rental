@@ -13,7 +13,16 @@ const bookSchema = z.object({
   bookCount: z.number().min(1),
 });
 
-const getBook = async (req, res) => {
+const getBooks = async (req, res) => {
+  try {
+    const books = await Book.findAll();
+    res.json(books);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const getBookById = async (req, res) => {
   try {
     const book = await Book.findById(req.params.id);
     if (!book) return res.status(404).json({ error: "Book not found" });
@@ -31,7 +40,7 @@ const getBook = async (req, res) => {
 const createBook = async (req, res) => {
   console.log(req.body);
   try {
-    const { category, ...otherData } = req.body;
+    const { category, rentPrice, bookQuantity, ...otherData } = req.body;
 
     const categoryId = await getCategoryByName(category);
     if (!categoryId) {
@@ -42,6 +51,8 @@ const createBook = async (req, res) => {
       ...otherData,
       categoryId,
       ownerId: req.user.id,
+      rentPrice: Number(rentPrice),
+      bookCount: Number(bookQuantity),
     };
 
     const validatedData = bookSchema.parse(bookData);
@@ -92,7 +103,8 @@ const deleteBook = async (req, res) => {
 };
 
 module.exports = {
-  getBook,
+  getBooks,
+  getBookById,
   createBook,
   updateBook,
   deleteBook,

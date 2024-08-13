@@ -64,6 +64,15 @@ class Book {
     );
     return result.rows[0];
   }
+
+  static async findAll() {
+    const result = await db.query(`
+    SELECT books.title, books.categoryId, books.author, categories.name AS category
+    FROM books
+    JOIN categories ON books.categoryId = categories.id
+  `);
+    return result.rows;
+  }
 }
 
 module.exports = Book;
