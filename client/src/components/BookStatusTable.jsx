@@ -1,4 +1,5 @@
 import {
+  Box,
   Table,
   TableBody,
   TableCell,
@@ -9,7 +10,6 @@ import {
   IconButton,
   Typography,
   Avatar,
-  Box,
 } from "@mui/material";
 import useAbility from "../hooks/useAbility";
 import SearchIcon from "@mui/icons-material/Search";
@@ -20,6 +20,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import rentedIcon from "../assets/rentedIcon.svg";
 import freeIcon from "../assets/freeIcon.svg";
+import useBooks from "../hooks/useBooks";
 
 const owners = {
   "Nardos T": "https://randomuser.me/api/portraits/women/14.jpg",
@@ -27,18 +28,13 @@ const owners = {
   "Tesfu N": "https://randomuser.me/api/portraits/men/16.jpg",
 };
 
-const rows = [
-  {
-    no: 1,
-    bookNo: "6465",
-    owner: "Nardos T",
-    status: "Rented",
-    price: "40 Birr",
-  },
-];
-
 const BookStatusTable = () => {
   const ability = useAbility();
+  const { books, loading, error } = useBooks();
+
+  if (loading) return <Typography>Loading books...</Typography>;
+  if (error) return <Typography>{error}</Typography>;
+
   return (
     <Box
       sx={{
@@ -112,9 +108,9 @@ const BookStatusTable = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row, index) => (
-              <TableRow key={index}>
-                <TableCell>{`0${row.no}`}</TableCell>
+            {books.map((book, index) => (
+              <TableRow key={book.id}>
+                <TableCell>{`0${index + 1}`}</TableCell>
                 <TableCell>
                   <Box
                     sx={{
@@ -123,42 +119,39 @@ const BookStatusTable = () => {
                       borderRadius: "4px",
                       display: "inline-block",
                     }}>
-                    {row.bookNo}
+                    {book.id}
                   </Box>
                 </TableCell>
-                <TableCell>
-                  <Box sx={{ display: "flex", alignItems: "center" }}>
-                    <Avatar
-                      src={owners[row.owner]}
-                      alt={row.owner}
-                      sx={{ width: 24, height: 24, mr: 1 }}
-                    />
-                    <Typography>{row.owner}</Typography>
-                  </Box>
-                </TableCell>
+                {ability.can("manages", "Owners") && (
+                  <TableCell>
+                    <Box sx={{ display: "flex", alignItems: "center" }}>
+                      <Avatar
+                        src={owners[book.owner]}
+                        alt={book.owner}
+                        sx={{ width: 24, height: 24, mr: 1 }}
+                      />
+                      <Typography>{book.owner}</Typography>
+                    </Box>
+                  </TableCell>
+                )}
+                {ability.can("update", "Book") && (
+                  <TableCell>{book.title}</TableCell>
+                )}
                 <TableCell>
                   <Box sx={{ display: "flex", alignItems: "center" }}>
                     <Box
                       component="img"
-                      src={row.status === "Rented" ? rentedIcon : freeIcon}
-                      alt={`${
-                        row.status === "Rented" ? "Rented" : "Free"
-                      } Icon`}
+                      src={book.isApproved ? rentedIcon : freeIcon}
+                      alt={book.isApproved ? "Rented" : "Free"}
                       sx={{ width: 16, height: 16, mr: 2 }}
                     />
-                    <Typography
-                      sx={{
-                        color: "#656575",
-                      }}>
-                      {row.status}
+                    <Typography sx={{ color: "#656575" }}>
+                      {book.isApproved ? "Rented" : "Free"}
                     </Typography>
                   </Box>
                 </TableCell>
-                <TableCell
-                  sx={{
-                    color: "#656575",
-                  }}>
-                  {row.price}
+                <TableCell sx={{ color: "#656575" }}>
+                  {book.rentprice} Birr
                 </TableCell>
                 {ability.can("update", "Book") && (
                   <TableCell>

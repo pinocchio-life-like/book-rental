@@ -101,10 +101,28 @@ const deleteBook = async (req, res) => {
   }
 };
 
+const updateBookApproval = async (req, res) => {
+  try {
+    const { isapproved } = req.body;
+    const book = await Book.findById(req.params.id);
+    if (!book) return res.status(404).json({ error: "Book not found" });
+
+    if (req.ability.can("update", book)) {
+      const updatedBook = await Book.updateApproval(req.params.id, isapproved);
+      res.json(updatedBook);
+    } else {
+      throw new ForbiddenError("Access denied");
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 module.exports = {
   getBooks,
   getBookById,
   createBook,
   updateBook,
   deleteBook,
+  updateBookApproval,
 };

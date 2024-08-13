@@ -31,6 +31,14 @@ export const fetchBooks = () => {
   return api.get("/books/books");
 };
 
+export const fetchUsers = () => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    setAuthToken(token);
+  }
+  return api.get("/users/users");
+};
+
 export const fetchBookById = (id) => api.get(`/books/books/${id}`);
 
 export const createBook = (bookData) => api.post("/books/books", bookData);
@@ -47,5 +55,15 @@ export const getCategories = () => {
   }
   return api.get("/categories/categories");
 };
+
+export const updateBookApproval = async (id, isApproved) => {
+  return api.patch(`/books/books/${id}`, { isapproved: isApproved });
+};
+
+export const updateUserApproval = async (id, isApproved) => {
+  return api.patch(`/users/users/${id}`, { isapproved: isApproved });
+};
+
+export const deleteUser = (id) => api.delete(`/users/users/${id}`);
 
 export default api;

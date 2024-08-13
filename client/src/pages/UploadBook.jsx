@@ -14,18 +14,21 @@ import {
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import fileUploadIcon from "../assets/fileUploadIcon.svg";
+import smileIcon from "../assets/smileIcon.svg";
 import { useState, useEffect } from "react";
 import { createBook, fetchBooks } from "../services/api";
 import useCategories from "../hooks/useCategories";
 import useDialog from "../hooks/useDialog";
 
-const Owners = () => {
+const UploadBook = () => {
   const {
     categories,
     loading: categoriesLoading,
     error: categoriesError,
   } = useCategories();
   const { open, handleClickOpen, handleClose } = useDialog();
+
+  const [successDialogOpen, setSuccessDialogOpen] = useState(false);
 
   const [selectedBook, setSelectedBook] = useState(null);
   const [books, setBooks] = useState([]);
@@ -78,7 +81,14 @@ const Owners = () => {
 
     try {
       await createBook(finalBookData);
-      alert("Book uploaded successfully!");
+      setSuccessDialogOpen(true);
+      setBookData({ bookQuantity: "", rentPrice: "" });
+      setSelectedBook(null);
+      setNewBookData({ title: "", author: "", category: "" });
+
+      setTimeout(() => {
+        setSuccessDialogOpen(false);
+      }, 10000);
     } catch (error) {
       alert("Error uploading book");
     }
@@ -93,10 +103,7 @@ const Owners = () => {
       category: newBookData.category,
     };
 
-    // Add the new book to the books array
     setBooks([...books, newBook]);
-
-    // Set the selected book to the newly created book object
     setSelectedBook(newBook);
 
     handleClose();
@@ -419,8 +426,52 @@ const Owners = () => {
           </DialogActions>
         </form>
       </Dialog>
+      <Dialog
+        open={successDialogOpen}
+        onClose={() => setSuccessDialogOpen(false)}
+        PaperProps={{
+          sx: {
+            borderRadius: "16px",
+            padding: "24px 32px",
+            textAlign: "center",
+            maxWidth: "400px",
+            margin: "auto",
+          },
+        }}>
+        <DialogContent>
+          <Box
+            component="img"
+            src={smileIcon}
+            alt="Success Icon"
+            sx={{
+              width: 100,
+              height: 100,
+              mb: 2,
+            }}
+          />
+          <Typography variant="h6" sx={{ mb: 2 }}>
+            Congrats!
+          </Typography>
+          <Typography variant="body2" sx={{ color: "#525256", mb: 4 }}>
+            Your book has been uploaded successfully. Wait until it is approved.
+          </Typography>
+          <Button
+            onClick={() => setSuccessDialogOpen(false)}
+            variant="contained"
+            color="primary"
+            sx={{
+              bgcolor: "#00ABFF",
+              color: "#fff",
+              "&:hover": {
+                bgcolor: "#0056b3",
+              },
+            }}>
+            OK
+          </Button>
+        </DialogContent>
+      </Dialog>
     </Box>
   );
 };
 
-export default Owners;
+export default UploadBook;

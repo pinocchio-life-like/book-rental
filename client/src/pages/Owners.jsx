@@ -12,7 +12,7 @@ const Owners = () => {
         <Grid container spacing={3}>
           <Grid item xs={12} md={12}>
             <Box sx={{ mb: 2 }}>
-              <ApproveTable />
+              <ApproveTable page="owners" />
             </Box>
           </Grid>
         </Grid>

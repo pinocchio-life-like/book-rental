@@ -66,12 +66,26 @@ class Book {
   }
 
   static async findAll() {
-    const result = await db.query(`
-    SELECT books.title, books.categoryId, books.author, categories.name AS category
-    FROM books
-    JOIN categories ON books.categoryId = categories.id
-  `);
-    return result.rows;
+    try {
+      const result = await db.query(`
+      SELECT books.*, categories.name AS category, users.name AS owner
+      FROM books
+      JOIN categories ON books.categoryId = categories.id
+      JOIN users ON books.ownerId = users.id
+    `);
+      return result.rows;
+    } catch (error) {
+      console.error("Error fetching books:", error);
+      throw error;
+    }
+  }
+
+  static async updateApproval(id, isApproved) {
+    const result = await db.query(
+      "UPDATE books SET isApproved = $1 WHERE id = $2 RETURNING *",
+      [isApproved, id]
+    );
+    return result.rows[0];
   }
 }
 
