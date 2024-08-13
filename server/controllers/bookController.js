@@ -70,17 +70,33 @@ const createBook = async (req, res) => {
 
 const updateBook = async (req, res) => {
   try {
-    const validatedData = bookSchema.parse(req.body);
+    const { category, rentprice, bookcount, ...otherData } = req.body;
+
+    const categoryId = await getCategoryByName(category);
+    if (!categoryId) {
+      return res.status(400).json({ error: "Invalid category" });
+    }
+
+    const bookData = {
+      ...otherData,
+      categoryId,
+      ownerId: req.user.id,
+      rentPrice: Number(rentprice),
+      bookCount: Number(bookcount),
+    };
+
+    const validatedData = bookSchema.parse(bookData);
     const book = await Book.findById(req.params.id);
     if (!book) return res.status(404).json({ error: "Book not found" });
 
-    if (req.ability.can("update", book)) {
+    if (req.ability.can("update", "Book")) {
       const updatedBook = await Book.updateById(req.params.id, validatedData);
       res.json(updatedBook);
     } else {
       throw new ForbiddenError("Access denied");
     }
   } catch (error) {
+    console.error("Error updating book:", error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -90,7 +106,7 @@ const deleteBook = async (req, res) => {
     const book = await Book.findById(req.params.id);
     if (!book) return res.status(404).json({ error: "Book not found" });
 
-    if (req.ability.can("delete", book)) {
+    if (req.ability.can("delete", "Book")) {
       await Book.deleteById(req.params.id);
       res.status(204).send();
     } else {

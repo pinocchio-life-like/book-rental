@@ -10,6 +10,7 @@ const useBooks = () => {
     const fetchBookData = async () => {
       try {
         const response = await fetchBooks();
+        console.log(response.data);
         setBooks(response.data);
       } catch (err) {
         setError("Error fetching books");
@@ -21,7 +22,7 @@ const useBooks = () => {
     fetchBookData();
   }, []);
 
-  return { books, loading, error };
+  return { books, loading, error, setBooks };
 };
 
 export default useBooks;

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Box,
   Table,
@@ -10,6 +11,12 @@ import {
   IconButton,
   Typography,
   Avatar,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
+  Button,
 } from "@mui/material";
 import useAbility from "../hooks/useAbility";
 import SearchIcon from "@mui/icons-material/Search";
@@ -21,6 +28,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import rentedIcon from "../assets/rentedIcon.svg";
 import freeIcon from "../assets/freeIcon.svg";
 import useBooks from "../hooks/useBooks";
+import { updateBook, deleteBook } from "../services/api";
 
 const owners = {
   "Nardos T": "https://randomuser.me/api/portraits/women/14.jpg",
@@ -30,7 +38,56 @@ const owners = {
 
 const BookStatusTable = () => {
   const ability = useAbility();
-  const { books, loading, error } = useBooks();
+  const { books, loading, error, setBooks } = useBooks();
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [selectedBook, setSelectedBook] = useState(null);
+
+  const handleEditOpen = (book) => {
+    setSelectedBook(book);
+    setEditDialogOpen(true);
+  };
+
+  const handleEditClose = () => {
+    setEditDialogOpen(false);
+    setSelectedBook(null);
+  };
+
+  const handleEditSubmit = async () => {
+    try {
+      const updatedBook = await updateBook(selectedBook.id, selectedBook);
+      setBooks((prevBooks) =>
+        prevBooks.map((book) =>
+          book.id === updatedBook.data.id ? updatedBook.data : book
+        )
+      );
+      setEditDialogOpen(false);
+    } catch (error) {
+      console.error("Error updating book", error);
+    }
+  };
+
+  const handleDeleteOpen = (book) => {
+    setSelectedBook(book);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteClose = () => {
+    setDeleteDialogOpen(false);
+    setSelectedBook(null);
+  };
+
+  const handleDeleteConfirm = async () => {
+    try {
+      await deleteBook(selectedBook.id);
+      setBooks((prevBooks) =>
+        prevBooks.filter((book) => book.id !== selectedBook.id)
+      );
+      setDeleteDialogOpen(false);
+    } catch (error) {
+      console.error("Error deleting book", error);
+    }
+  };
 
   if (loading) return <Typography>Loading books...</Typography>;
   if (error) return <Typography>{error}</Typography>;
@@ -155,10 +212,16 @@ const BookStatusTable = () => {
                 </TableCell>
                 {ability.can("update", "Book") && (
                   <TableCell>
-                    <IconButton aria-label="edit" size="small">
+                    <IconButton
+                      aria-label="edit"
+                      size="small"
+                      onClick={() => handleEditOpen(book)}>
                       <EditIcon sx={{ color: "black" }} fontSize="inherit" />
                     </IconButton>
-                    <IconButton aria-label="delete" size="small">
+                    <IconButton
+                      aria-label="delete"
+                      size="small"
+                      onClick={() => handleDeleteOpen(book)}>
                       <DeleteIcon sx={{ color: "red" }} fontSize="inherit" />
                     </IconButton>
                   </TableCell>
@@ -168,6 +231,63 @@ const BookStatusTable = () => {
           </TableBody>
         </Table>
       </TableContainer>
+
+      <Dialog open={editDialogOpen} onClose={handleEditClose}>
+        <DialogTitle>Edit Book</DialogTitle>
+        <DialogContent>
+          <TextField
+            margin="dense"
+            label="Book Title"
+            fullWidth
+            value={selectedBook?.title || ""}
+            onChange={(e) =>
+              setSelectedBook({ ...selectedBook, title: e.target.value })
+            }
+          />
+          <TextField
+            margin="dense"
+            label="Author"
+            fullWidth
+            value={selectedBook?.author || ""}
+            onChange={(e) =>
+              setSelectedBook({ ...selectedBook, author: e.target.value })
+            }
+          />
+          <TextField
+            margin="dense"
+            label="Rent Price"
+            fullWidth
+            type="number"
+            value={selectedBook?.rentprice || ""}
+            onChange={(e) =>
+              setSelectedBook({ ...selectedBook, rentprice: e.target.value })
+            }
+            inputProps={{ min: 1 }}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleEditClose}>Cancel</Button>
+          <Button onClick={handleEditSubmit} color="primary">
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={deleteDialogOpen} onClose={handleDeleteClose}>
+        <DialogTitle>Confirm Delete</DialogTitle>
+        <DialogContent>
+          <Typography>
+            Are you sure you want to delete the book titled :{" "}
+            {selectedBook?.title}?
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDeleteClose}>Cancel</Button>
+          <Button onClick={handleDeleteConfirm} color="error">
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

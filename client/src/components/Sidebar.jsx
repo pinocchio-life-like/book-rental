@@ -44,7 +44,12 @@ const Sidebar = () => {
         <SidebarIconButton onClick={toggleSidebar} expanded={expanded} />
         <SidebarLogo expanded={expanded} />
       </Box>
-      <List>
+      <List
+        sx={{
+          borderTop: "0.5px solid #F8F8F880",
+          borderBottom: "0.5px solid #F8F8F880",
+          py: 4,
+        }}>
         <SidebarItem
           to="/dashboard"
           icon={dashboardIcon}
@@ -96,7 +101,7 @@ const Sidebar = () => {
           expanded={expanded}
         />
       </List>
-      <List sx={{ mt: 2 }}>
+      <List sx={{ mt: 2, borderBottom: "0.5px solid #F8F8F880", pb: 4 }}>
         <SidebarItem
           to="/notification"
           icon={notificationIcon}
