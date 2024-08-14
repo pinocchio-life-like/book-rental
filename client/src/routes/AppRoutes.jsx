@@ -1,5 +1,9 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Home from "../pages/Home";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import Login from "../pages/Login";
 import Signup from "../pages/Signup";
 import Dashboard from "../pages/Dashboard";
@@ -12,27 +16,57 @@ import Owners from "../pages/Owners";
 import UploadBook from "../pages/UploadBook";
 
 function AppRoutes() {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
 
   return (
     <Router>
       <AbilityProvider user={user}>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route
+            path="/"
+            element={<Navigate to={token ? "/dashboard" : "/login"} />}
+          />
 
-          {/* Public Routes */}
           <Route path="/" element={<PublicRoute />}>
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
           </Route>
 
-          {/* Private Routes */}
-          <Route path="/" element={<PrivateRoute />}>
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/books" element={<Books />} />
-            <Route path="/owners" element={<Owners />} />
-          </Route>
-          <Route path="/book-upload" element={<UploadBook />} />
+          <Route
+            path="/dashboard"
+            element={
+              <PrivateRoute ability="read" subject="Book">
+                <Dashboard />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/books"
+            element={
+              <PrivateRoute ability="manages" subject="Book">
+                <Books />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/owners"
+            element={
+              <PrivateRoute ability="manages" subject="Owners">
+                <Owners />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/book-upload"
+            element={
+              <PrivateRoute ability="upload" subject="Book">
+                <UploadBook />
+              </PrivateRoute>
+            }
+          />
         </Routes>
       </AbilityProvider>
     </Router>

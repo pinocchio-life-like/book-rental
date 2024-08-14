@@ -13,7 +13,7 @@ export const AbilityProvider = ({ children }) => {
     if (user) {
       setAbility(defineAbilitiesFor(user));
     } else {
-      setAbility(new Ability()); // Provide a default or empty ability
+      setAbility(new Ability());
     }
   }, [user]);
 
